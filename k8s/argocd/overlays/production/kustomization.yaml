@@ -10,8 +10,18 @@ resources:
 - ingress.yaml
 
 generators:
-- argocd-aws-credentials.yaml
+- argo-cd-aws-credentials.yaml
+- argocd-notifications-secret.yaml
 
 patchesStrategicMerge:
-- argocd-cm.yaml
+- argo-cd-cm.yaml
 - argo-cd-repo-server-ksops-patch.yaml
+- argocd-notifications-cm.yaml
+
+patches:
+- path: argocd-notifications-appproject.yaml
+  target:
+    group: argoproj.io
+    kind: AppProject
+    name: omegaup
+    version: v1alpha1

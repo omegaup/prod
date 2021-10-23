@@ -1,0 +1,8 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: omegaup
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-running.slack: feed_dev
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: feed_dev
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: feed_dev

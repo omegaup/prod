@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+data:
+  context: |
+    argocdUrl: https://argocd.omegaup.com
+
+  service.slack: |
+    token: $slack-token
