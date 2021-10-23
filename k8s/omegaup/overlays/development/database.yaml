@@ -80,6 +80,7 @@ kind: Job
 metadata:
   name: db-migrate
 spec:
+  ttlSecondsAfterFinished: 3600
   template:
     spec:
       containers:
