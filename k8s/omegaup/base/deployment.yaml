@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: php
-        image: omegaup/php:latest
+        image: omegaup/php
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9000
@@ -34,7 +34,7 @@ spec:
         - name: varlog
           mountPath: /var/log
       - name: nginx
-        image: omegaup/nginx:latest
+        image: omegaup/nginx
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
@@ -64,7 +64,7 @@ spec:
         - name: varlog
           mountPath: /var/log
       - name: init-volume
-        image: omegaup/frontend:latest
+        image: omegaup/frontend
         imagePullPolicy: IfNotPresent
         command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
         volumeMounts:

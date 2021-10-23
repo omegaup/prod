@@ -84,7 +84,7 @@ spec:
     spec:
       containers:
       - name: db-migrate
-        image: omegaup/frontend-sidecar:latest
+        image: omegaup/frontend-sidecar
         imagePullPolicy: IfNotPresent
         command: [
           'bash',
@@ -106,7 +106,7 @@ spec:
           mountPath: /opt/omegaup
       initContainers:
       - name: init-volume
-        image: omegaup/frontend:latest
+        image: omegaup/frontend
         imagePullPolicy: IfNotPresent
         command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
         volumeMounts:

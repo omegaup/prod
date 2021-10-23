@@ -4,45 +4,43 @@ kind: Kustomization
 metadata:
   name: kustomization
 
-bases:
-- ../../base
-
 secretGenerator:
-- name: omegaup-secret
-  files:
+- files:
   - omegaup-secret/config.php
-- name: frontend-secret
-  files:
+  name: omegaup-secret
+- files:
   - frontend-secret/certificate.pem
   - frontend-secret/key.pem
-- name: broadcaster-secret
-  files:
+  name: frontend-secret
+- files:
   - broadcaster-secret/config.json
   - broadcaster-secret/certificate.pem
   - broadcaster-secret/key.pem
-- name: grader-secret
-  files:
+  name: broadcaster-secret
+- files:
   - grader-secret/config.json
   - grader-secret/certificate.pem
   - grader-secret/key.pem
-- name: runner-secret
-  files:
+  name: grader-secret
+- files:
   - runner-secret/config.json
   - runner-secret/certificate.pem
   - runner-secret/key.pem
-- name: gitserver-secret
-  files:
+  name: runner-secret
+- files:
   - gitserver-secret/config.json
+  name: gitserver-secret
 
 configMapGenerator:
-- name: nginx-config
-  behavior: merge
+- behavior: merge
   files:
   - nginx-config/php-upstream.conf
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
+  name: nginx-config
 
 resources:
+- ../../base
 - database.yaml
 - backend.yaml
 
@@ -62,6 +60,16 @@ patches:
       value: omegaup.local
   target:
     group: networking.k8s.io
-    version: v1
     kind: Ingress
     name: frontend-ingress
+    version: v1
+
+images:
+- name: omegaup/frontend
+  newTag: latest-main
+- name: omegaup/frontend-sidecar
+  newTag: latest-main
+- name: omegaup/nginx
+  newTag: latest-main
+- name: omegaup/php
+  newTag: latest-main

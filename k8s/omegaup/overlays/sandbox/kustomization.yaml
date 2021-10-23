@@ -7,45 +7,43 @@ metadata:
   name: kustomization
   namespace: omegaup-sandbox
 
-bases:
-- ../../base
-
 secretGenerator:
-- name: omegaup-secret
-  files:
+- files:
   - omegaup-secret/config.php
-- name: frontend-secret
-  files:
+  name: omegaup-secret
+- files:
   - frontend-secret/certificate.pem
   - frontend-secret/key.pem
-- name: broadcaster-secret
-  files:
+  name: frontend-secret
+- files:
   - broadcaster-secret/config.json
   - broadcaster-secret/certificate.pem
   - broadcaster-secret/key.pem
-- name: grader-secret
-  files:
+  name: broadcaster-secret
+- files:
   - grader-secret/config.json
   - grader-secret/certificate.pem
   - grader-secret/key.pem
-- name: runner-secret
-  files:
+  name: grader-secret
+- files:
   - runner-secret/config.json
   - runner-secret/certificate.pem
   - runner-secret/key.pem
-- name: gitserver-secret
-  files:
+  name: runner-secret
+- files:
   - gitserver-secret/config.json
+  name: gitserver-secret
 
 configMapGenerator:
-- name: nginx-config
-  behavior: merge
+- behavior: merge
   files:
   - nginx-config/php-upstream.conf
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
+  name: nginx-config
 
 resources:
+- ../../base
 - database.yaml
 - backend.yaml
 
@@ -65,9 +63,9 @@ patches:
       value: sandbox-k8s.omegaup.com
   target:
     group: networking.k8s.io
-    version: v1
     kind: Ingress
     name: frontend-ingress
+    version: v1
 - patch: |-
     apiVersion: networking.k8s.io/v1
     kind: Ingress
@@ -83,12 +81,11 @@ patches:
         secretName: frontend-ingress-cert
 
 images:
-- name: omegaup/php:latest
-  newName: omegaup/php
-  newTag: latest-main
-- name: omegaup/nginx:latest
-  newName: omegaup/nginx
-  newTag: latest-main
-- name: omegaup/frontend:latest
-  newName: omegaup/frontend
-  newTag: latest-main
+- name: omegaup/frontend
+  newTag: c1c47c6bade6f6bcf739ec4410863a37b1da7700
+- name: omegaup/frontend-sidecar
+  newTag: c1c47c6bade6f6bcf739ec4410863a37b1da7700
+- name: omegaup/nginx
+  newTag: c1c47c6bade6f6bcf739ec4410863a37b1da7700
+- name: omegaup/php
+  newTag: c1c47c6bade6f6bcf739ec4410863a37b1da7700
