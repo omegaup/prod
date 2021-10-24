@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  url: https://argocd.omegaup.com
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: 4bcb5d95d98a20d1fe6a
+          clientSecret: $dex.github.clientSecret
+          orgs:
+            - name: omegaup
+  kustomize.buildOptions: "--enable-alpha-plugins"

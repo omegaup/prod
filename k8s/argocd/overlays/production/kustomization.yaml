@@ -12,9 +12,10 @@ resources:
 generators:
 - argocd-aws-credentials-generator.yaml
 - argocd-notifications-secret-generator.yaml
+- argocd-secret-generator.yaml
 
 patchesStrategicMerge:
-- argo-cd-cm.yaml
+- argocd-cm.yaml
 - argo-cd-repo-server-ksops-patch.yaml
 - argocd-notifications-cm.yaml
 
