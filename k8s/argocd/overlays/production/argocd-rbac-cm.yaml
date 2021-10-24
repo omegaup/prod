@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  policy.default: ""
+  policy.csv: |
+    g, omegaup:deploy, role:readonly
+    g, omegaup:deploy-admin, role:admin
