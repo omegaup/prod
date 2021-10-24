@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: grader-metrics
-        image: omegaup/grader_metrics:20210706
+        image: omegaup/grader_metrics:20211024
         env:
           - name: CONNECTION_STRING
             valueFrom:
