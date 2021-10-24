@@ -1,0 +1,3 @@
+creation_rules:
+  - encrypted_regex: '^(data|stringData)$'
+    kms: arn:aws:kms:us-east-1:273107833591:key/mrk-b51dea56f02f4964835066e80ee531b0

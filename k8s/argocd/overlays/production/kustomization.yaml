@@ -10,8 +10,8 @@ resources:
 - ingress.yaml
 
 generators:
-- argo-cd-aws-credentials.yaml
-- argocd-notifications-secret.yaml
+- argocd-aws-credentials-generator.yaml
+- argocd-notifications-secret-generator.yaml
 
 patchesStrategicMerge:
 - argo-cd-cm.yaml

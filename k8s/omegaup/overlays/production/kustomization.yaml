@@ -11,4 +11,4 @@ resources:
 - grader-metrics.yaml
 
 generators:
-- grader-metrics-secret.yaml
+- grader-metrics-secret-generator.yaml
