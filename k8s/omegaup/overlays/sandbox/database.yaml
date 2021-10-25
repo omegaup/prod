@@ -77,11 +77,11 @@ apiVersion: batch/v1
 kind: Job
 
 metadata:
-  generateName: db-migrate
+  name: db-migrate
   annotations:
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
-  ttlSecondsAfterFinished: 3600
   template:
     spec:
       containers:
