@@ -17,7 +17,7 @@ metadata:
     app: mysql
 spec:
   replicas: 1
-  revisionHistoryLimit: 2
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: mysql
