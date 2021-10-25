@@ -83,12 +83,6 @@ patches:
       - hosts:
         - sandbox-k8s.omegaup.com
         secretName: frontend-ingress-cert
-- path: db-migrate-name.yaml
-  target:
-    group: batch
-    kind: Job
-    name: db-migrate
-    version: v1
 
 images:
 - name: omegaup/frontend
