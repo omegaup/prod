@@ -125,6 +125,9 @@ metadata:
   name: backend-service
   labels:
     app: backend
+  annotations:
+    prometheus.io/port: '6060'
+    prometheus.io/scrape: 'true'
 spec:
   selector:
     app: backend
