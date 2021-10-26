@@ -1,7 +1,7 @@
 {
 	"Logging": {
-		"File": "/var/log/gitserver.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"DB": {
 		"Driver": "mysql",

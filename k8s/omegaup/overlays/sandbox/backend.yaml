@@ -27,6 +27,7 @@ metadata:
   name: backend-deployment
   labels:
     app: backend
+    env: sandbox
 spec:
   replicas: 1
   revisionHistoryLimit: 1
@@ -39,6 +40,7 @@ spec:
     metadata:
       labels:
         app: backend
+        env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
@@ -61,8 +63,6 @@ spec:
           mountPath: /var/lib/omegaup
         - name: omegaup-problems
           mountPath: /var/lib/omegaup/problems.git
-        - name: varlog
-          mountPath: /var/log
       - name: broadcaster
         image: omegaup/backend:v1.6.3
         command: ['/usr/bin/omegaup-broadcaster']
@@ -80,8 +80,6 @@ spec:
           mountPath: /var/lib/omegaup
         - name: omegaup-problems
           mountPath: /var/lib/omegaup/problems.git
-        - name: varlog
-          mountPath: /var/log
       - name: grader
         image: omegaup/backend:v1.6.3
         command: ['/usr/bin/omegaup-grader']
@@ -97,38 +95,24 @@ spec:
           mountPath: /etc/omegaup/grader
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
-        - name: varlog
-          mountPath: /var/log
-      - name: fluentbit
-        image: fluent/fluent-bit:1.8
-        command: ['/fluent-bit/bin/fluent-bit', '--quiet', '-c', '/fluent-bit/etc/fluent-bit.conf']
+      - name: runner
+        image: omegaup/runner:v1.7.0
+        command: ['/usr/bin/omegaup-runner']
+        ports:
+        - name: prometheus
+          containerPort: 6060
         volumeMounts:
-        - name: fluentbit-config
-          mountPath: /fluent-bit/etc/
-        - name: varlog
-          mountPath: /var/log
-      initContainers:
-      - name: init-varlog
-        image: busybox:1.28
-        command: ['sh', '-c', 'touch /var/log/broadcaster.log /var/log/grader.log /var/log/gitserver.log']
-        securityContext:
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-        volumeMounts:
-        - name: varlog
-          mountPath: /var/log
+        - name: omegaup-runner
+          mountPath: /var/lib/omegaup
       volumes:
       - name: omegaup-backend
         persistentVolumeClaim:
           claimName: omegaup-backend-pvc
+      - name: omegaup-runner
+        emptyDir: {}
       - name: omegaup-problems
         persistentVolumeClaim:
           claimName: omegaup-problems-pvc
-      - name: varlog
-        emptyDir: {}
-      - name: fluentbit-config
-        configMap:
-          name: fluentbit-config
       - name: broadcaster-secret
         secret:
           secretName: broadcaster-secret

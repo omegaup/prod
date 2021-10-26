@@ -1,7 +1,7 @@
 {
 	"Logging": {
-		"File": "/var/log/broadcaster.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"Broadcaster": {
 		"FrontendURL": "http://frontend-service",

@@ -1,7 +1,7 @@
 {
 	"Logging": {
-		"File": "/var/log/runner.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"Runner": {
 		"RuntimePath": "/var/lib/omegaup/runner",
@@ -12,6 +12,6 @@
 		"KeyFile": "/etc/omegaup/runner/key.pem"
 	},
 	"Tracing": {
-		"File": "/var/log/omegaup/runner.tracing.json"
+		"Enabled": false
 	}
 }

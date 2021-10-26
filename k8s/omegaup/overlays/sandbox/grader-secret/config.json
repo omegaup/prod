@@ -1,7 +1,7 @@
 {
 	"Logging": {
-		"File": "/var/log/grader.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"Broadcaster": {
 		"FrontendURL": "http://frontend-service:8001"
@@ -14,7 +14,7 @@
 		"Enabled": false
 	},
 	"Grader": {
-		"BroadcasterURL": "https://localhost:32672/broadcast/",
+		"BroadcasterURL": "https://backend-service:32672/broadcast/",
 		"V1": {
 			"Enabled": true
 		}
