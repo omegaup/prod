@@ -1,3 +1,4 @@
 requests>=2.25
 prometheus-client>=0.10
 opencensus-ext-azure>=1.0
+python-json-logger>=2.0.2

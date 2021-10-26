@@ -7,13 +7,34 @@ import logging
 import os
 import time
 
+from typing import Any, Dict, Mapping
+
 from opencensus.ext.azure import metrics_exporter  # type: ignore
 from opencensus.metrics.export import gauge  # type: ignore
 from prometheus_client import parser  # type: ignore
+from pythonjsonlogger import jsonlogger  # type: ignore
 import requests
 
 _UTC = datetime.timezone.utc
 _SAMPLE_INTERVAL = datetime.timedelta(seconds=15)
+
+
+class _CustomJsonFormatter(jsonlogger.JsonFormatter):  # type: ignore
+    """A JSON formatter that adds the level."""
+    def add_fields(
+        self,
+        log_record: Dict[str, str],
+        record: logging.LogRecord,
+        message_dict: Mapping[str, Any],
+    ) -> None:
+        super().add_fields(log_record, record, message_dict)
+        if not log_record.get('time'):
+            log_record['time'] = datetime.datetime.utcnow().strftime(
+                '%Y-%m-%dT%H:%M:%S.%fZ')
+        if log_record.get('level'):
+            log_record['level'] = log_record['level'].lower()
+        else:
+            log_record['level'] = record.levelname.lower()
 
 
 def _queue_length(grader_prometheus: str) -> float:
@@ -37,7 +58,11 @@ def _main() -> None:
                            type=str,
                            required=default_connection_string is None)
     args = argparser.parse_args()
-    logging.basicConfig(level=logging.INFO)
+
+    log_handler = logging.StreamHandler()
+    formatter = _CustomJsonFormatter()
+    log_handler.setFormatter(formatter)
+    logging.basicConfig(level=logging.INFO, handlers=[log_handler], force=True)
     logging.info('Starting grader_metrics.py')
 
     now = int(time.time())
