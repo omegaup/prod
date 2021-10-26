@@ -102,6 +102,8 @@ spec:
         - name: prometheus
           containerPort: 6060
         volumeMounts:
+        - name: runner-secret
+          mountPath: /etc/omegaup/runner
         - name: omegaup-runner
           mountPath: /var/lib/omegaup
       volumes:
