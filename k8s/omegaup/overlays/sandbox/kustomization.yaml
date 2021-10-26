@@ -40,8 +40,8 @@ secretGenerator:
 configMapGenerator:
 - behavior: merge
   files:
-  - fluentbit-config/override_loki.conf
-  name: fluentbit-config
+  - fluent-bit-config/output.conf
+  name: fluent-bit-config
 - behavior: merge
   files:
   - nginx-config/php-upstream.conf

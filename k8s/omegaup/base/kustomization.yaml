@@ -7,10 +7,11 @@ resources:
 - deployment.yaml
 
 configMapGenerator:
-- name: fluentbit-config
+- name: fluent-bit-config
   files:
-  - fluentbit-config/fluent-bit.conf
-  - fluentbit-config/parsers.conf
+  - fluent-bit-config/fluent-bit.conf
+  - fluent-bit-config/parsers.conf
+  - fluent-bit-config/output.conf
 - name: php-config
   files:
   - php-config/php-fpm.conf

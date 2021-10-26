@@ -73,14 +73,6 @@ spec:
           mountPath: /var/lib/omegaup
         - name: varlog
           mountPath: /var/log
-      - name: fluentbit
-        image: fluent/fluent-bit:1.8
-        command: ['/fluent-bit/bin/fluent-bit', '--quiet', '-c', '/fluent-bit/etc/fluent-bit.conf']
-        volumeMounts:
-        - name: fluentbit-config
-          mountPath: /fluent-bit/etc/
-        - name: varlog
-          mountPath: /var/log
       initContainers:
       - name: init-varlog
         image: busybox:1.28
@@ -98,9 +90,6 @@ spec:
         emptyDir: {}
       - name: varlog
         emptyDir: {}
-      - name: fluentbit-config
-        configMap:
-          name: fluentbit-config
       - name: broadcaster-secret
         secret:
           secretName: broadcaster-secret

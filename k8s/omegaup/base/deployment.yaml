@@ -46,11 +46,11 @@ spec:
           mountPath: /opt/omegaup
         - name: varlog
           mountPath: /var/log
-      - name: fluentbit
+      - name: fluent-bit
         image: fluent/fluent-bit:1.8
         command: ['/fluent-bit/bin/fluent-bit', '--quiet', '-c', '/fluent-bit/etc/fluent-bit.conf']
         volumeMounts:
-        - name: fluentbit-config
+        - name: fluent-bit-config
           mountPath: /fluent-bit/etc/
         - name: varlog
           mountPath: /var/log
@@ -84,9 +84,9 @@ spec:
       - name: php-config
         configMap:
           name: php-config
-      - name: fluentbit-config
+      - name: fluent-bit-config
         configMap:
-          name: fluentbit-config
+          name: fluent-bit-config
       - name: varlog
         emptyDir: {}
       - name: omegaup
