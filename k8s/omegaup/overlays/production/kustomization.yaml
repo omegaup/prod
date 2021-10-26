@@ -7,6 +7,9 @@ metadata:
   name: kustomization
   namespace: omegaup
 
+commonLabels:
+  env: production
+
 resources:
 - grader-metrics.yaml
 

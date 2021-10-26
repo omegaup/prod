@@ -27,7 +27,6 @@ metadata:
   name: backend-deployment
   labels:
     app: backend
-    env: sandbox
 spec:
   replicas: 1
   revisionHistoryLimit: 1

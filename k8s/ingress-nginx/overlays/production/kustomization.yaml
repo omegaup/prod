@@ -3,5 +3,8 @@ kind: Kustomization
 
 namespace: ingress-nginx
 
+commonLabels:
+  env: production
+
 bases:
 - ../../base

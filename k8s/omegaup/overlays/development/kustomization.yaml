@@ -4,6 +4,9 @@ kind: Kustomization
 metadata:
   name: kustomization
 
+commonLabels:
+  env: development
+
 secretGenerator:
 - files:
   - omegaup-secret/config.php

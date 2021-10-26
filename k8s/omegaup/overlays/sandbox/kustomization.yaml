@@ -7,6 +7,9 @@ metadata:
   name: kustomization
   namespace: omegaup-sandbox
 
+commonLabels:
+  env: sandbox
+
 secretGenerator:
 - files:
   - omegaup-secret/config.php
