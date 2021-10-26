@@ -86,6 +86,8 @@ spec:
         ports:
         - name: grader
           containerPort: 21680
+        - name: grader-runner
+          containerPort: 11302
         - name: ephemeral
           containerPort: 36663
         - name: prometheus
@@ -152,6 +154,10 @@ spec:
     protocol: TCP
     port: 21680
     targetPort: 21680
+  - name: grader-runner
+    protocol: TCP
+    port: 11302
+    targetPort: 11302
   - name: ephemeral
     protocol: TCP
     port: 36663
