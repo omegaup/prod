@@ -99,7 +99,7 @@ spec:
           mountPath: /var/lib/omegaup
       - name: runner
         image: omegaup/runner:v1.7.0
-        command: ['/usr/bin/omegaup-runner']
+        command: ['/usr/bin/omegaup-runner', '-noop-sandbox']
         ports:
         - name: prometheus
           containerPort: 6060
