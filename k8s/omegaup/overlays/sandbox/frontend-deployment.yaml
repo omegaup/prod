@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: frontend-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        container_name: omegaup/frontend:818fd50c6d7741fba0b708fc3896e6342236360e
