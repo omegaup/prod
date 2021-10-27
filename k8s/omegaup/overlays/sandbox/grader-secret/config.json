@@ -14,7 +14,7 @@
 		"Enabled": false
 	},
 	"Grader": {
-		"BroadcasterURL": "https://backend-service:32672/broadcast/",
+		"BroadcasterURL": "https://broadcaster-service:32672/broadcast/",
 		"V1": {
 			"Enabled": true
 		}
