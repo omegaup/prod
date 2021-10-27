@@ -40,10 +40,6 @@ secretGenerator:
 configMapGenerator:
 - behavior: merge
   files:
-  - fluent-bit-config/output.conf
-  name: fluent-bit-config
-- behavior: merge
-  files:
   - nginx-config/php-upstream.conf
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
