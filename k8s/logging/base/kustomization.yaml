@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: logging
+
+resources:
+- deployment.yaml
+
+configMapGenerator:
+- name: fluent-bit-config
+  files:
+  - fluent-bit-config/fluent-bit.conf
+  - fluent-bit-config/input-kubernetes.conf
+  - fluent-bit-config/filter-kubernetes.conf
+  - fluent-bit-config/output.conf
+  - fluent-bit-config/parsers.conf
