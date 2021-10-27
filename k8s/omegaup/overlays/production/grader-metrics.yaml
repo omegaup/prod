@@ -4,19 +4,20 @@ kind: Deployment
 metadata:
   name: grader-metrics-deployment
   labels:
-    app: grader-metrics
+    app.kubernetes.io/name: grader-metrics
 spec:
   replicas: 1
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: grader-metrics
+      app.kubernetes.io/name: grader-metrics
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: grader-metrics
+        app.kubernetes.io/name: grader-metrics
+        app.kubernetes.io/version: "20211026"
     spec:
       containers:
       - name: grader-metrics

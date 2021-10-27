@@ -56,8 +56,6 @@ patches:
     kind: Deployment
     metadata:
       name: frontend-deployment
-      labels:
-        app: frontend
     spec:
       replicas: 1
 - patch: |-

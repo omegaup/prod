@@ -7,4 +7,4 @@ spec:
   template:
     metadata:
       labels:
-        container_name: omegaup/frontend:818fd50c6d7741fba0b708fc3896e6342236360e
+        app.kubernetes.io/version: 818fd50c6d7741fba0b708fc3896e6342236360e

@@ -4,18 +4,18 @@ kind: Deployment
 metadata:
   name: backend-deployment
   labels:
-    app: backend
+    app.kubernetes.io/name: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app.kubernetes.io/name: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: backend
+        app.kubernetes.io/name: backend
     spec:
       containers:
       - name: gitserver
@@ -109,10 +109,10 @@ kind: Service
 metadata:
   name: backend-service
   labels:
-    app: backend
+    app.kubernetes.io/name: backend
 spec:
   selector:
-    app: backend
+    app.kubernetes.io/name: backend
   ports:
   - name: gitserver
     protocol: TCP

@@ -16,18 +16,19 @@ kind: Deployment
 metadata:
   name: mysql-deployment
   labels:
-    app: mysql
+    app.kubernetes.io/name: mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app.kubernetes.io/name: mysql
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app.kubernetes.io/name: mysql
+        app.kubernetes.io/version: "8.0"
     spec:
       containers:
       - image: mysql:8.0
@@ -64,10 +65,10 @@ kind: Service
 metadata:
   name: mysql-service
   labels:
-    app: mysql
+    app.kubernetes.io/name: mysql
 spec:
   selector:
-    app: mysql
+    app.kubernetes.io/name: mysql
   ports:
   - name: http
     protocol: TCP

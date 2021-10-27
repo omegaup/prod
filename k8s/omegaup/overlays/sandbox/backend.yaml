@@ -24,21 +24,112 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: backend-deployment
+  name: grader-deployment
   labels:
-    app: backend
+    app.kubernetes.io/name: grader
+    app.kubernetes.io/part-of: backend
 spec:
   replicas: 1
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: backend
+      app.kubernetes.io/name: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: backend
+        app.kubernetes.io/name: grader
+        app.kubernetes.io/version: "v1.6.3"
+        app.kubernetes.io/part-of: backend
+        env: sandbox
+      annotations:
+        prometheus.io/port: '6060'
+        prometheus.io/scrape: 'true'
+    spec:
+      containers:
+      - name: grader
+        image: omegaup/backend:v1.6.3
+        command: ['/usr/bin/omegaup-grader']
+        ports:
+        - name: grader
+          containerPort: 21680
+        - name: grader-runner
+          containerPort: 11302
+        - name: ephemeral
+          containerPort: 36663
+        - name: prometheus
+          containerPort: 6060
+        volumeMounts:
+        - name: grader-secret
+          mountPath: /etc/omegaup/grader
+        - name: omegaup-backend
+          mountPath: /var/lib/omegaup
+        - name: omegaup-problems
+          mountPath: /var/lib/omegaup/problems.git
+      volumes:
+      - name: omegaup-backend
+        persistentVolumeClaim:
+          claimName: omegaup-backend-pvc
+      - name: omegaup-problems
+        persistentVolumeClaim:
+          claimName: omegaup-problems-pvc
+      - name: grader-secret
+        secret:
+          secretName: grader-secret
+      securityContext:
+        fsGroup: 1000
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: grader-service
+  labels:
+    app.kubernetes.io/name: grader
+    app.kubernetes.io/part-of: backend
+  annotations:
+    prometheus.io/port: '6060'
+    prometheus.io/scrape: 'true'
+spec:
+  selector:
+    app.kubernetes.io/name: grader
+  ports:
+  - name: grader
+    protocol: TCP
+    port: 21680
+    targetPort: 21680
+  - name: grader-runner
+    protocol: TCP
+    port: 11302
+    targetPort: 11302
+  - name: ephemeral
+    protocol: TCP
+    port: 36663
+    targetPort: 36663
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: gitserver-deployment
+  labels:
+    app.kubernetes.io/name: gitserver
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gitserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gitserver
+        app.kubernetes.io/version: "v1.8.2"
+        app.kubernetes.io/part-of: backend
         env: sandbox
       annotations:
         prometheus.io/port: '6060'
@@ -62,6 +153,67 @@ spec:
           mountPath: /var/lib/omegaup
         - name: omegaup-problems
           mountPath: /var/lib/omegaup/problems.git
+      volumes:
+      - name: omegaup-backend
+        persistentVolumeClaim:
+          claimName: omegaup-backend-pvc
+      - name: omegaup-problems
+        persistentVolumeClaim:
+          claimName: omegaup-problems-pvc
+      - name: gitserver-secret
+        secret:
+          secretName: gitserver-secret
+      securityContext:
+        fsGroup: 1000
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: gitserver-service
+  labels:
+    app.kubernetes.io/name: gitserver
+    app.kubernetes.io/part-of: backend
+  annotations:
+    prometheus.io/port: '6060'
+    prometheus.io/scrape: 'true'
+spec:
+  selector:
+    app.kubernetes.io/name: gitserver
+  ports:
+  - name: gitserver
+    protocol: TCP
+    port: 33861
+    targetPort: 33861
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: broadcaster-deployment
+  labels:
+    app.kubernetes.io/name: broadcaster
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: broadcaster
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: broadcaster
+        app.kubernetes.io/version: "v1.8.2"
+        app.kubernetes.io/part-of: backend
+        env: sandbox
+      annotations:
+        prometheus.io/port: '6060'
+        prometheus.io/scrape: 'true'
+    spec:
+      containers:
       - name: broadcaster
         image: omegaup/backend:v1.6.3
         command: ['/usr/bin/omegaup-broadcaster']
@@ -75,27 +227,61 @@ spec:
         volumeMounts:
         - name: broadcaster-secret
           mountPath: /etc/omegaup/broadcaster
-        - name: omegaup-backend
-          mountPath: /var/lib/omegaup
-        - name: omegaup-problems
-          mountPath: /var/lib/omegaup/problems.git
-      - name: grader
-        image: omegaup/backend:v1.6.3
-        command: ['/usr/bin/omegaup-grader']
-        ports:
-        - name: grader
-          containerPort: 21680
-        - name: grader-runner
-          containerPort: 11302
-        - name: ephemeral
-          containerPort: 36663
-        - name: prometheus
-          containerPort: 6060
-        volumeMounts:
-        - name: grader-secret
-          mountPath: /etc/omegaup/grader
-        - name: omegaup-backend
-          mountPath: /var/lib/omegaup
+      volumes:
+      - name: broadcaster-secret
+        secret:
+          secretName: broadcaster-secret
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: broadcaster-service
+  labels:
+    app.kubernetes.io/name: broadcaster
+    app.kubernetes.io/part-of: backend
+  annotations:
+    prometheus.io/port: '6060'
+    prometheus.io/scrape: 'true'
+spec:
+  selector:
+    app.kubernetes.io/name: broadcaster
+  ports:
+  - name: broadcaster
+    port: 32672
+    targetPort: 32672
+  - name: events
+    port: 22291
+    targetPort: 22291
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: runner-deployment
+  labels:
+    app.kubernetes.io/name: runner
+    app.kubernetes.io/part-of: backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: runner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: runner
+        app.kubernetes.io/version: "v1.7.0"
+        app.kubernetes.io/part-of: backend
+        env: sandbox
+      annotations:
+        prometheus.io/port: '6060'
+        prometheus.io/scrape: 'true'
+    spec:
+      containers:
       - name: runner
         image: omegaup/runner:v1.7.0
         command: ['/usr/bin/omegaup-runner', '-noop-sandbox']
@@ -108,62 +294,8 @@ spec:
         - name: omegaup-runner
           mountPath: /var/lib/omegaup
       volumes:
-      - name: omegaup-backend
-        persistentVolumeClaim:
-          claimName: omegaup-backend-pvc
       - name: omegaup-runner
         emptyDir: {}
-      - name: omegaup-problems
-        persistentVolumeClaim:
-          claimName: omegaup-problems-pvc
-      - name: broadcaster-secret
-        secret:
-          secretName: broadcaster-secret
-      - name: grader-secret
-        secret:
-          secretName: grader-secret
       - name: runner-secret
         secret:
           secretName: runner-secret
-      - name: gitserver-secret
-        secret:
-          secretName: gitserver-secret
-      securityContext:
-        fsGroup: 1000
----
-apiVersion: v1
-kind: Service
-
-metadata:
-  name: backend-service
-  labels:
-    app: backend
-  annotations:
-    prometheus.io/port: '6060'
-    prometheus.io/scrape: 'true'
-spec:
-  selector:
-    app: backend
-  ports:
-  - name: gitserver
-    protocol: TCP
-    port: 33861
-    targetPort: 33861
-  - name: grader
-    protocol: TCP
-    port: 21680
-    targetPort: 21680
-  - name: grader-runner
-    protocol: TCP
-    port: 11302
-    targetPort: 11302
-  - name: ephemeral
-    protocol: TCP
-    port: 36663
-    targetPort: 36663
-  - name: broadcaster
-    port: 32672
-    targetPort: 32672
-  - name: events
-    port: 22291
-    targetPort: 22291
