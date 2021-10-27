@@ -3,16 +3,17 @@ kind: Deployment
 metadata:
   name: loki-deployment
   labels:
-    app: loki
+    app.kubernetes.io/name: loki
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loki
+      app.kubernetes.io/name: loki
   template:
     metadata:
       labels:
-        app: loki
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/version: "2.3.0"
     spec:
       containers:
       - name: loki
@@ -29,11 +30,11 @@ kind: Service
 metadata:
   name: loki-service
   labels:
-    app: loki
+    app.kubernetes.io/name: loki
 spec:
   type: LoadBalancer
   selector:
-    app: loki
+    app.kubernetes.io/name: loki
   ports:
   - protocol: TCP
     port: 3100
@@ -89,16 +90,17 @@ kind: Deployment
 metadata:
   name: prometheus-deployment
   labels:
-    app: prometheus
+    app.kubernetes.io/name: prometheus
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      app.kubernetes.io/name: prometheus
   template:
     metadata:
       labels:
-        app: prometheus
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/version: "2.30.3"
     spec:
       containers:
       - name: prometheus
@@ -136,14 +138,14 @@ kind: Service
 metadata:
   name: prometheus-service
   labels:
-    app: prometheus
+    app.kubernetes.io/name: prometheus
   annotations:
     prometheus.io/port: '9090'
     prometheus.io/scrape: 'true'
 spec:
   type: LoadBalancer
   selector:
-    app: prometheus
+    app.kubernetes.io/name: prometheus
   ports:
   - protocol: TCP
     port: 9090
@@ -166,16 +168,17 @@ kind: Deployment
 metadata:
   name: grafana-deployment
   labels:
-    app: grafana
+    app.kubernetes.io/name: grafana
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      app.kubernetes.io/name: grafana
   template:
     metadata:
       labels:
-        app: grafana
+        app.kubernetes.io/name: grafana
+        app.kubernetes.io/version: "8.2.2"
     spec:
       containers:
       - name: grafana
@@ -227,11 +230,11 @@ kind: Service
 metadata:
   name: grafana-service
   labels:
-    app: grafana
+    app.kubernetes.io/name: grafana
 spec:
   type: LoadBalancer
   selector:
-    app: grafana
+    app.kubernetes.io/name: grafana
   ports:
   - protocol: TCP
     port: 3000
