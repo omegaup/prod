@@ -11,7 +11,58 @@ commonLabels:
   env: production
 
 resources:
+- ../../base
 - grader-metrics.yaml
 
 generators:
 - grader-metrics-secret-generator.yaml
+- frontend-secret-generator.yaml
+- omegaup-secret-generator.yaml
+
+configMapGenerator:
+- behavior: merge
+  files:
+  - nginx-config/php-upstream.conf
+  - nginx-config/broadcaster-upstream.conf
+  - nginx-config/grader-upstream.conf
+  name: nginx-config
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: k8s.omegaup.com
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: frontend-ingress
+    version: v1
+- patch: |-
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: frontend-ingress
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+        nginx.org/hsts: true
+    spec:
+      tls:
+      - hosts:
+        - k8s.omegaup.com
+        secretName: frontend-ingress-cert
+- path: frontend-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: frontend-deployment
+    version: v1
+
+images:
+- name: omegaup/frontend
+  newTag: 8a1ae0b5d20a94d35e2830c7a6ef8d835d957476
+- name: omegaup/frontend-sidecar
+  newTag: 8a1ae0b5d20a94d35e2830c7a6ef8d835d957476
+- name: omegaup/nginx
+  newTag: 8a1ae0b5d20a94d35e2830c7a6ef8d835d957476
+- name: omegaup/php
+  newTag: 8a1ae0b5d20a94d35e2830c7a6ef8d835d957476
