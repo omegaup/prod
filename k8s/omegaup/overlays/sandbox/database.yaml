@@ -1,4 +1,15 @@
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-config
@@ -51,7 +62,8 @@ spec:
           mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: mysql-persistent-storage
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: mysql-pvc
       - name: mysql-config
         configMap:
           name: mysql-config
