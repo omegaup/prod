@@ -10,10 +10,10 @@ metadata:
 commonLabels:
   env: sandbox
 
+generators:
+- omegaup-secret-generator.yaml
+
 secretGenerator:
-- files:
-  - omegaup-secret/config.php
-  name: omegaup-secret
 - files:
   - frontend-secret/certificate.pem
   - frontend-secret/key.pem
