@@ -50,6 +50,20 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
+        - name: liveness-port
+          containerPort: 8090
+        readinessProbe:
+          httpGet:
+            path: /stub_status
+            port: liveness-port
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /stub_status
+            port: liveness-port
+          initialDelaySeconds: 15
+          periodSeconds: 20
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx
@@ -124,6 +138,10 @@ spec:
     protocol: TCP
     port: 8000
     targetPort: 8000
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 60
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
