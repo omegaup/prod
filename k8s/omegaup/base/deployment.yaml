@@ -36,6 +36,8 @@ spec:
           mountPath: /opt/omegaup
         - name: varlog
           mountPath: /var/log
+        - name: runphp
+          mountPath: /run/php
       - name: nginx
         image: omegaup/nginx
         imagePullPolicy: IfNotPresent
@@ -48,6 +50,8 @@ spec:
           mountPath: /opt/omegaup
         - name: varlog
           mountPath: /var/log
+        - name: runphp
+          mountPath: /run/php
       - name: fluent-bit
         image: fluent/fluent-bit:1.8
         command: ['/fluent-bit/bin/fluent-bit', '--quiet', '-c', '/fluent-bit/etc/fluent-bit.conf']
@@ -92,6 +96,8 @@ spec:
       - name: varlog
         emptyDir: {}
       - name: omegaup
+        emptyDir: {}
+      - name: runphp
         emptyDir: {}
 ---
 apiVersion: v1
