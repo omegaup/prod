@@ -40,7 +40,6 @@ secretGenerator:
 configMapGenerator:
 - behavior: merge
   files:
-  - nginx-config/php-upstream.conf
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
   name: nginx-config
