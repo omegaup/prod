@@ -21,6 +21,13 @@ spec:
         ports:
         - name: http-loki
           containerPort: 3100
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 2m
+            memory: 64Mi
   strategy:
     type: Recreate
   revisionHistoryLimit: 1
@@ -115,11 +122,11 @@ spec:
           containerPort: 9090
         resources:
           limits:
-            cpu: 1
-            memory: 1Gi
-          requests:
             cpu: 500m
-            memory: 500M
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi
         volumeMounts:
         - name: prometheus-pv
           mountPath: /prometheus/
@@ -188,9 +195,12 @@ spec:
           protocol: TCP
           containerPort: 3000
         resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
           requests:
-            cpu: 250m
-            memory: 750Mi
+            cpu: 50m
+            memory: 64Mi
         volumeMounts:
         - name: grafana-pv
           mountPath: /var/lib/grafana

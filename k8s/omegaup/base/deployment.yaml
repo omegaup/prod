@@ -23,6 +23,13 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9000
+        resources:
+          limits:
+            cpu: 1
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 64Mi
         volumeMounts:
         - name: frontend-secret
           mountPath: /etc/omegaup/frontend

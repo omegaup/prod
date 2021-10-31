@@ -28,3 +28,10 @@ spec:
               secretKeyRef:
                 name: grader-metrics-secret
                 key: CONNECTION_STRING
+        resources:
+          limits:
+            cpu: "2m"
+            memory: "50Mi"
+          requests:
+            cpu: "1m"
+            memory: "40Mi"
