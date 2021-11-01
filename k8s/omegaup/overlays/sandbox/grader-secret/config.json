@@ -4,7 +4,7 @@
 		"JSON": true
 	},
 	"Broadcaster": {
-		"FrontendURL": "http://frontend-service:8001"
+		"FrontendURL": "http://frontend-service:8000"
 	},
 	"DB": {
 		"Driver": "mysql",

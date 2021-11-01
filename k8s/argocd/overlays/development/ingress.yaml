@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: argocd.local
+  - host: argocd.test
     http:
       paths:
       - path: /

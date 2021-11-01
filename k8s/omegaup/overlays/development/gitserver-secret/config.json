@@ -1,7 +1,7 @@
 {
 	"Logging": {
-		"File": "/var/log/gitserver.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"DB": {
 		"Driver": "mysql",
@@ -12,6 +12,6 @@
 		"AllowDirectPushToMaster": true,
 		"SecretToken": "secret",
 		"AllowSecretTokenAuthentication": true,
-		"FrontendAuthorizationProblemRequestURL": "http://frontend-service:8001/api/authorization/problem/"
+		"FrontendAuthorizationProblemRequestURL": "http://frontend-service:8000/api/authorization/problem/"
 	}
 }

@@ -4,7 +4,7 @@
 		"JSON": true
 	},
 	"Broadcaster": {
-		"FrontendURL": "http://frontend-service",
+		"FrontendURL": "http://frontend-service:8000",
 		"ScoreboardUpdateSecret": "secret"
 	},
 	"Tracing": {

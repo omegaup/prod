@@ -1,10 +1,10 @@
 {
 	"Logging": {
-		"File": "/var/log/grader.log",
-		"JSON": false
+		"File": "stderr",
+		"JSON": true
 	},
 	"Broadcaster": {
-		"FrontendURL": "http://frontend-service:8001"
+		"FrontendURL": "http://frontend-service:8000"
 	},
 	"DB": {
 		"Driver": "mysql",
@@ -14,7 +14,7 @@
 		"Enabled": false
 	},
 	"Grader": {
-		"BroadcasterURL": "https://localhost:32672/broadcast/",
+		"BroadcasterURL": "https://broadcaster-service:32672/broadcast/",
 		"V1": {
 			"Enabled": true
 		}
