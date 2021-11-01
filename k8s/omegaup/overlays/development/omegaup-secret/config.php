@@ -6,7 +6,7 @@ define('OMEGAUP_DB_HOST', 'mysql-service');
 define('OMEGAUP_DB_NAME', 'omegaup');
 define('OMEGAUP_DB_PASS', 'omegaup');
 define('OMEGAUP_DB_USER', 'omegaup');
-define('OMEGAUP_ENVIRONMENT', 'development');
+define('OMEGAUP_ENVIRONMENT', 'production');
 define('OMEGAUP_LOG_FILE', '/var/log/frontend.log');
 define('OMEGAUP_ENABLE_SOCIAL_MEDIA_RESOURCES', false);
 define('SMARTY_CACHE_DIR', '/tmp');
