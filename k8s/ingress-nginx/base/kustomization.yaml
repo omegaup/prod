@@ -4,4 +4,15 @@ kind: Kustomization
 namespace: ingress-nginx
 
 resources:
-  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/aws/deploy.yaml
+- https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/aws/deploy.yaml
+
+patches:
+- patch: |-
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      labels:
+        app.kubernetes.io/component: controller
+      name: nginx
+      annotations:
+        ingressclass.kubernetes.io/is-default-class: "true"
