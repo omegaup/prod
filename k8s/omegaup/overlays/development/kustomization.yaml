@@ -36,6 +36,9 @@ secretGenerator:
 - files:
   - gitserver-secret/config.json
   name: gitserver-secret
+- files:
+  - redis-secret/redis.conf
+  name: redis-secret
 
 configMapGenerator:
 - behavior: merge
