@@ -50,7 +50,7 @@ spec:
     spec:
       affinity:
         podAffinity:
-          requiredDuringSchedulingRequiredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
               - key: app.kubernetes.io/component
@@ -155,7 +155,7 @@ spec:
     spec:
       affinity:
         podAffinity:
-          requiredDuringSchedulingRequiredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
               - key: app.kubernetes.io/component
