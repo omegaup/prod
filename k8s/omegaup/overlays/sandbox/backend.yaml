@@ -57,6 +57,7 @@ spec:
                 operator: In
                 values:
                 - grader
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: grader
         image: omegaup/backend:v1.6.3
@@ -162,6 +163,7 @@ spec:
                 operator: In
                 values:
                 - grader
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
         image: omegaup/gitserver:v1.8.2
