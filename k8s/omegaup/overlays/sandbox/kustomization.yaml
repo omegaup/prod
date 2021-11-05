@@ -82,6 +82,19 @@ patches:
       - hosts:
         - sandbox-k8s.omegaup.com
         secretName: frontend-ingress-cert
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: grader-deployment
+    spec:
+      template:
+        spec:
+          containers:
+          - name: grader
+            resources:
+              limits:
+                memory: 64Mi
 - path: frontend-deployment.yaml
   target:
     group: apps

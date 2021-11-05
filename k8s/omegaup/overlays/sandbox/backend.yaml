@@ -42,11 +42,21 @@ spec:
         app.kubernetes.io/name: grader
         app.kubernetes.io/version: "v1.6.3"
         app.kubernetes.io/part-of: backend
+        app.kubernetes.io/component: grader
         env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingRequiredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - grader
       containers:
       - name: grader
         image: omegaup/backend:v1.6.3
@@ -60,6 +70,13 @@ spec:
           containerPort: 36663
         - name: prometheus
           containerPort: 6060
+        resources:
+          limits:
+            cpu: 350m
+            memory: 1300Mi
+          requests:
+            cpu: 50m
+            memory: 16Mi
         volumeMounts:
         - name: grader-secret
           mountPath: /etc/omegaup/grader
@@ -130,11 +147,21 @@ spec:
         app.kubernetes.io/name: gitserver
         app.kubernetes.io/version: "v1.8.2"
         app.kubernetes.io/part-of: backend
+        app.kubernetes.io/component: grader
         env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingRequiredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - grader
       containers:
       - name: gitserver
         image: omegaup/gitserver:v1.8.2
@@ -148,7 +175,7 @@ spec:
           containerPort: 6060
         resources:
           limits:
-            cpu: 250m
+            cpu: 350m
             memory: 256Mi
           requests:
             cpu: 50m
@@ -231,6 +258,13 @@ spec:
           containerPort: 22291
         - name: prometheus
           containerPort: 6060
+        resources:
+          limits:
+            cpu: 100m
+            memory: 32Mi
+          requests:
+            cpu: 50m
+            memory: 8Mi
         volumeMounts:
         - name: broadcaster-secret
           mountPath: /etc/omegaup/broadcaster
@@ -276,7 +310,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: runner
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -295,6 +329,13 @@ spec:
         ports:
         - name: prometheus
           containerPort: 6060
+        resources:
+          limits:
+            cpu: 50m
+            memory: 32Mi
+          requests:
+            cpu: 50m
+            memory: 6Mi
         volumeMounts:
         - name: runner-secret
           mountPath: /etc/omegaup/runner
