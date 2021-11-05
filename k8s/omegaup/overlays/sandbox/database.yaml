@@ -18,6 +18,22 @@ data:
     CREATE DATABASE IF NOT EXISTS `_omegaup_metadata`;
     CREATE USER IF NOT EXISTS 'omegaup'@'localhost' IDENTIFIED BY 'omegaup';
     FLUSH PRIVILEGES;
+  docker.cnf: |
+    [mysqld]
+    skip-host-cache
+    skip-name-resolve
+    key_buffer              = 16M
+    read_buffer             = 60K
+    sort_buffer             = 1M
+    innodb_buffer_pool_size = 64M
+    tmp_table               = 8M
+    max_allowed_packet      = 16M
+    thread_stack            = 192K
+    thread_cache_size       = 8
+    # This replaces the startup script and checks MyISAM tables if needed
+    # the first time they are touched
+    myisam-recover         = BACKUP
+    max_connections        = 25
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,18 +74,26 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-        - name: mysql-config
+        - name: mysql-entrypoint-initdb-config
           mountPath: /docker-entrypoint-initdb.d
+        - name: mysql-config
+          mountPath: /etc/mysql/conf.d/docker.cnf
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pvc
-      - name: mysql-config
+      - name: mysql-entrypoint-initdb-config
         configMap:
           name: mysql-config
           items:
             - key: 00-create-metadata.sql
               path: 00-create-metadata.sql
+      - name: mysql-config
+        configMap:
+          name: mysql-config
+          items:
+            - key: docker.cnf
+              path: docker.cnf
 ---
 apiVersion: v1
 kind: Service
