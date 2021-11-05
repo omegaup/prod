@@ -78,6 +78,7 @@ spec:
           mountPath: /docker-entrypoint-initdb.d
         - name: mysql-config
           mountPath: /etc/mysql/conf.d/docker.cnf
+          subPath: docker.cnf
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
