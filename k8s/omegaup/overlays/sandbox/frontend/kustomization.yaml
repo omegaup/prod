@@ -19,24 +19,6 @@ secretGenerator:
   - frontend-secret/key.pem
   name: frontend-secret
 - files:
-  - broadcaster-secret/config.json
-  - broadcaster-secret/certificate.pem
-  - broadcaster-secret/key.pem
-  name: broadcaster-secret
-- files:
-  - grader-secret/config.json
-  - grader-secret/certificate.pem
-  - grader-secret/key.pem
-  name: grader-secret
-- files:
-  - runner-secret/config.json
-  - runner-secret/certificate.pem
-  - runner-secret/key.pem
-  name: runner-secret
-- files:
-  - gitserver-secret/config.json
-  name: gitserver-secret
-- files:
   - redis-secret/redis.conf
   name: redis-secret
 
@@ -48,9 +30,7 @@ configMapGenerator:
   name: nginx-config
 
 resources:
-- ../../base/frontend
-- database.yaml
-- backend.yaml
+- ../../../base/frontend
 
 patches:
 - patch: |-
@@ -82,19 +62,6 @@ patches:
       - hosts:
         - sandbox-k8s.omegaup.com
         secretName: frontend-ingress-cert
-- patch: |-
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: grader-deployment
-    spec:
-      template:
-        spec:
-          containers:
-          - name: grader
-            resources:
-              limits:
-                memory: 64Mi
 - path: frontend-deployment.yaml
   target:
     group: apps

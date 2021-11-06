@@ -19,23 +19,10 @@ secretGenerator:
   - frontend-secret/key.pem
   name: frontend-secret
 - files:
-  - broadcaster-secret/config.json
-  - broadcaster-secret/certificate.pem
-  - broadcaster-secret/key.pem
-  name: broadcaster-secret
-- files:
-  - grader-secret/config.json
-  - grader-secret/certificate.pem
-  - grader-secret/key.pem
-  name: grader-secret
-- files:
   - runner-secret/config.json
   - runner-secret/certificate.pem
   - runner-secret/key.pem
   name: runner-secret
-- files:
-  - gitserver-secret/config.json
-  name: gitserver-secret
 - files:
   - redis-secret/redis.conf
   name: redis-secret
@@ -49,6 +36,7 @@ configMapGenerator:
 
 resources:
 - ../../base/frontend
+- ../../base/backend
 - database.yaml
 - backend.yaml
 

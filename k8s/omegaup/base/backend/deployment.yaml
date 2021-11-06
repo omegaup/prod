@@ -1,17 +1,6 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: omegaup-problems-pvc
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: omegaup-backend-pvc
 spec:
   resources:
@@ -296,56 +285,3 @@ spec:
   - name: events
     port: 22291
     targetPort: 22291
----
-apiVersion: apps/v1
-kind: Deployment
-
-metadata:
-  name: runner-deployment
-  labels:
-    app.kubernetes.io/name: runner
-    app.kubernetes.io/part-of: backend
-spec:
-  replicas: 1
-  revisionHistoryLimit: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: runner
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: runner
-        app.kubernetes.io/version: "v1.7.0"
-        app.kubernetes.io/part-of: backend
-        env: sandbox
-      annotations:
-        prometheus.io/port: '6060'
-        prometheus.io/scrape: 'true'
-    spec:
-      containers:
-      - name: runner
-        image: omegaup/runner:v1.7.0
-        command: ['/usr/bin/omegaup-runner', '-noop-sandbox']
-        ports:
-        - name: prometheus
-          containerPort: 6060
-        resources:
-          limits:
-            cpu: 50m
-            memory: 32Mi
-          requests:
-            cpu: 50m
-            memory: 6Mi
-        volumeMounts:
-        - name: runner-secret
-          mountPath: /etc/omegaup/runner
-        - name: omegaup-runner
-          mountPath: /var/lib/omegaup
-      volumes:
-      - name: omegaup-runner
-        emptyDir: {}
-      - name: runner-secret
-        secret:
-          secretName: runner-secret

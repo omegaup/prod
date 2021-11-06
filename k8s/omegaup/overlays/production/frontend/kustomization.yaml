@@ -11,7 +11,7 @@ commonLabels:
   env: production
 
 resources:
-- ../../base/frontend
+- ../../../base/frontend
 - grader-metrics.yaml
 - database.yaml
 

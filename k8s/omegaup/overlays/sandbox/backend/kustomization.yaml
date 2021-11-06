@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: omegaup-sandbox
+
+metadata:
+  name: kustomization
+  namespace: omegaup-sandbox
+
+commonLabels:
+  env: sandbox
+
+secretGenerator:
+- files:
+  - runner-secret/config.json
+  - runner-secret/certificate.pem
+  - runner-secret/key.pem
+  name: runner-secret
+
+resources:
+- ../../../base/backend
+- backend.yaml
+
+patches:
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: grader-deployment
+    spec:
+      template:
+        spec:
+          containers:
+          - name: grader
+            resources:
+              limits:
+                memory: 64Mi
