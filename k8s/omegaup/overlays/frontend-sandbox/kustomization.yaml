@@ -48,7 +48,7 @@ configMapGenerator:
   name: nginx-config
 
 resources:
-- ../../base
+- ../../base/frontend
 - database.yaml
 - backend.yaml
 
