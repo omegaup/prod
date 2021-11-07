@@ -12,6 +12,8 @@ commonLabels:
 
 generators:
 - omegaup-secret-generator.yaml
+- frontend-ingress-cert-generator.yaml
+- frontend-ingress-compat-cert-generator.yaml
 
 secretGenerator:
 - files:
@@ -32,6 +34,7 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
+- certificate.yaml
 
 patches:
 - patch: |-
@@ -56,13 +59,15 @@ patches:
     metadata:
       name: frontend-ingress
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt
         nginx.org/hsts: true
     spec:
       tls:
       - hosts:
         - sandbox-k8s.omegaup.com
         secretName: frontend-ingress-cert
+      - hosts:
+        - sandbox.omegaup.com
+        secretName: frontend-ingress-compat-cert
 - path: frontend-deployment.yaml
   target:
     group: apps
