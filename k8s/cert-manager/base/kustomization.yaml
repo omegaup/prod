@@ -3,3 +3,50 @@ kind: Kustomization
 
 resources:
 - https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
+
+patches:
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: cert-manager
+      namespace: cert-manager
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cert-manager
+            resources:
+              requests:
+                cpu: 2m
+                memory: 20Mi
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: cert-manager-cainjector
+      namespace: cert-manager
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cert-manager
+            resources:
+              requests:
+                cpu: 3m
+                memory: 33Mi
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: cert-manager-webhook
+      namespace: cert-manager
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cert-manager
+            resources:
+              requests:
+                cpu: 3m
+                memory: 16Mi
