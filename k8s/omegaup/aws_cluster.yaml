@@ -21,12 +21,13 @@ vpc:
   autoAllocateIPv6: false
 
 nodeGroups:
-- name: omegaup-eks-nodes-v2
-  labels: { role: workers }
+- name: omegaup-eks-nodes-reserved
+  labels: { role: workers, reserved: "true" }
   instanceType: t2.medium
-  desiredCapacity: 2
-  minSize: 2
-  maxSize: 2
+  desiredCapacity: 4
+  minSize: 4
+  maxSize: 4
+  volumeSize: 35
   privateNetworking: true
   ssh:
     allow: true
