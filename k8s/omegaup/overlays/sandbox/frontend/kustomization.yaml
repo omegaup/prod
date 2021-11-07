@@ -62,8 +62,10 @@ patches:
       tls:
       - hosts:
         - sandbox-k8s.omegaup.com
-        - sandbox.omegaup.com
         secretName: frontend-ingress-cert
+      - hosts:
+        - sandbox.omegaup.com
+        secretName: frontend-ingress-compat-cert
 - path: frontend-deployment.yaml
   target:
     group: apps
