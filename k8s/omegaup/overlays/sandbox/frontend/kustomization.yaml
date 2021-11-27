@@ -12,6 +12,7 @@ commonLabels:
 
 generators:
 - omegaup-secret-generator.yaml
+- newrelic-secret-generator.yaml
 
 secretGenerator:
 - files:
@@ -41,6 +42,18 @@ patches:
       name: frontend-deployment
     spec:
       replicas: 1
+      template:
+        spec:
+          containers:
+          - name: php
+            volumeMounts:
+            - name: newrelic-secret
+              mountPath: /etc/php/7.4/mods-available/newrelic.ini
+              subPath: newrelic.ini
+          volumes:
+          - name: newrelic-secret
+            secret:
+              secretName: newrelic-secret
 - patch: |-
     apiVersion: networking.k8s.io/v1
     kind: Ingress
