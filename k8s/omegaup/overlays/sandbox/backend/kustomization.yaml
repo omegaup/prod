@@ -10,6 +10,9 @@ metadata:
 commonLabels:
   env: sandbox
 
+generators:
+- gitserver-secret-generator.yaml
+
 secretGenerator:
 - files:
   - runner-secret/config.json
