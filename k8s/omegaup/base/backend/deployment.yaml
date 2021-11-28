@@ -155,7 +155,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
-        image: omegaup/gitserver:v1.8.5
+        image: omegaup/gitserver:v1.8.6
         command: ['/usr/bin/omegaup-gitserver']
         ports:
         - name: gitserver
