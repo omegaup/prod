@@ -100,10 +100,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: 3f6d07e83c4e4e6488a5ae128935f4e84a61ed9b
+  newTag: 203f6e833b0c4b8dc5bf6c26b379ef214b988231
 - name: omegaup/frontend-sidecar
-  newTag: 3f6d07e83c4e4e6488a5ae128935f4e84a61ed9b
+  newTag: 203f6e833b0c4b8dc5bf6c26b379ef214b988231
 - name: omegaup/nginx
-  newTag: 3f6d07e83c4e4e6488a5ae128935f4e84a61ed9b
+  newTag: 203f6e833b0c4b8dc5bf6c26b379ef214b988231
 - name: omegaup/php
-  newTag: 3f6d07e83c4e4e6488a5ae128935f4e84a61ed9b
+  newTag: 203f6e833b0c4b8dc5bf6c26b379ef214b988231
