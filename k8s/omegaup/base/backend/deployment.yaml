@@ -155,7 +155,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
-        image: omegaup/gitserver:v1.8.6
+        image: omegaup/gitserver:v1.8.10
         command: ['/usr/bin/omegaup-gitserver']
         ports:
         - name: gitserver
@@ -171,6 +171,18 @@ spec:
           requests:
             cpu: 50m
             memory: 16Mi
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: gitserver
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: gitserver
+          initialDelaySeconds: 15
+          periodSeconds: 20
         volumeMounts:
         - name: gitserver-secret
           mountPath: /etc/omegaup/gitserver
