@@ -135,7 +135,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: gitserver
-        app.kubernetes.io/version: "v1.8.2"
+        app.kubernetes.io/version: "v1.8.11"
         app.kubernetes.io/part-of: backend
         app.kubernetes.io/component: grader
         env: sandbox
@@ -155,7 +155,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
-        image: omegaup/gitserver:v1.8.10
+        image: omegaup/gitserver:v1.8.11
         command: ['/usr/bin/omegaup-gitserver']
         ports:
         - name: gitserver
