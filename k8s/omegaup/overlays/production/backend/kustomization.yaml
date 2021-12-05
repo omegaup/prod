@@ -5,7 +5,7 @@ namespace: omegaup
 
 resources:
 - ../../../base/backend
-- backend.yaml
+- deployment.yaml
 
 generators:
 - grader-secret-generator.yaml
