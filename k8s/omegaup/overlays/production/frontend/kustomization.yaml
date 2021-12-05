@@ -80,6 +80,9 @@ patches:
                     number: 8000
       tls:
       - hosts:
+        - omegaup.com
+        secretName: frontend-ingress-cert
+      - hosts:
         - k8s.omegaup.com
         secretName: frontend-ingress-compat-cert
 - path: frontend-deployment.yaml
