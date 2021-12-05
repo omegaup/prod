@@ -11,4 +11,4 @@ spec:
   - ReadWriteOnce
   storageClassName: gp2-retain
   volumeMode: Filesystem
-  volumeName: omegaup-problems-pv
+  volumeName: omegaup-problems-csi-pv
