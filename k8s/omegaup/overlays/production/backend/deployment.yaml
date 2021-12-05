@@ -2,7 +2,7 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 
 metadata:
-  name: standard
+  name: gp2-retain
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp2
@@ -39,5 +39,6 @@ spec:
       storage: 100Gi
   accessModes:
   - ReadWriteOnce
+  storageClassName: gp2-retain
   volumeMode: Filesystem
   volumeName: omegaup-problems-pv
