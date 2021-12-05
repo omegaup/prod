@@ -1,33 +1,3 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-
-metadata:
-  name: gp2-retain
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
-reclaimPolicy: Retain
-mountOptions:
-  - debug
-volumeBindingMode: Immediate
----
-apiVersion: v1
-kind: PersistentVolume
-
-metadata:
-  name: omegaup-problems-pv
-spec:
-  accessModes:
-  - ReadWriteOnce
-  awsElasticBlockStore:
-    fsType: ext4
-    volumeID: aws://us-east-1a/vol-0c4e243f2cdfd5ac5
-  capacity:
-    storage: 100Gi
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: gp2-retain
-  volumeMode: Filesystem
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 
