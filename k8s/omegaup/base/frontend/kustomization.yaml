@@ -5,6 +5,7 @@ namespace: omegaup
 
 resources:
 - deployment.yaml
+- cronjobs.yaml
 - redis.yaml
 
 configMapGenerator:

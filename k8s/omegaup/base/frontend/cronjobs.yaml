@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aggregate-feedback
+spec:
+  schedule: "18 10 * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: aggregate-feedback
+        app.kubernetes.io/part-of: frontend-cronjobs
+        app.kubernetes.io/component: omegaup-frontend
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob
+            image: omegaup/frontend-sidecar
+            imagePullPolicy: IfNotPresent
+            command:
+            - /opt/omegaup/stuff/cron/aggregate_feedback.py
+            - --log-json
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-ranks
+spec:
+  schedule: "19 * * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: update-ranks
+        app.kubernetes.io/part-of: frontend-cronjobs
+        app.kubernetes.io/component: omegaup-frontend
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob
+            image: omegaup/frontend-sidecar
+            imagePullPolicy: IfNotPresent
+            command:
+            - /opt/omegaup/stuff/cron/update_ranks.py
+            - --log-json
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: assign-badges
+spec:
+  schedule: "23 9 * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: assign-badges
+        app.kubernetes.io/part-of: frontend-cronjobs
+        app.kubernetes.io/component: omegaup-frontend
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob
+            image: omegaup/frontend-sidecar
+            imagePullPolicy: IfNotPresent
+            command:
+            - /opt/omegaup/stuff/cron/assign-badges.py
+            - --log-json
+          restartPolicy: OnFailure
