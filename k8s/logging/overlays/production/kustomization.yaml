@@ -9,8 +9,5 @@ commonLabels:
 bases:
 - ../../base
 
-configMapGenerator:
-- behavior: merge
-  name: fluent-bit-config
-  files:
-  - fluent-bit-config/output.conf
+generators:
+- fluent-bit-config-generator.yaml

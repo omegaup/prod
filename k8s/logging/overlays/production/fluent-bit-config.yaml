@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: fluent-bit-config
+    annotations:
+        kustomize.config.k8s.io/needs-hash: "true"
+        kustomize.config.k8s.io/behavior: merge
+data:
+    output.conf: ENC[AES256_GCM,data:cI1to8IJnXga3l9CTtmgmuoJjni0lJAUHozJespkbMzaACQyQZVVTdwQ6doEpG47r47uAW7NKZv2OZfmGkH/0draJ+Ct+nJGsvWv2IWTsQLtxf1g5lG/PcHVmlMzCZjsum7CYJRH0dxra5isjhwwQtaznBOWoFP9E7aTVgOQUjXbOUysQcE8n/4DZqumxyuFbkab+3uC9ulHBvpSHAMWrN3O8mMeYrUq4nRzK6RZCsNkeZF1gsMJ3gxBdyHu/joTNbJ+llCKNuTIpwJRmvR9rkevqXFbH/kP2SehS4bTU2vP3QxdfFFPSoPUaNlYzXWWodiQ2KCsuzlsf7H+we+Aap4oZ7pd8OyVsdaA+PGieZg8hSWGP6FEP12nzZVd+k6kHhwFOCw7NCy9yPkYSHjb5cLPk4+6UYxMu9t31jLsAV+WR/UxDUO90vx7+lJJGruBRvljtAlCzUxqDS7y9pMrXwzHWF9dEWlHS6oWy1zv6OCcm9yIoBRrbMg9oIIC5Xc0FvXUg9gCuGjuVyNkVQZTKqrWzTFBGfPIkzRnH38RBRGwqi94uyr+RxIh,iv:lYzWC1P7A+2zszWvdbco+QM3b7bYSsdhCBrFL0Qr7Go=,tag:ZvYPEOl88eXHp605YlG/nA==,type:str]
+sops:
+    kms:
+        - arn: arn:aws:kms:us-east-1:273107833591:key/mrk-b51dea56f02f4964835066e80ee531b0
+          created_at: "2021-12-10T14:52:10Z"
+          enc: AQICAHik82tDrWUjAnFKor0DW0Qtxt+MUW7jXDsQO0uycf6klQEmI3Q0Kz8eFp9PtBDBBJr8AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMgqQnHRUn/TTaEgyKAgEQgDtLIMpckG5ZNOuLxdF8rSQMS+CbFvOu+B8rXueMDb4mVqjwEqXqYysDQZzJwF+4TW84fr0xtycCBiP2gQ==
+          aws_profile: ""
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2021-12-10T15:02:56Z"
+    mac: ENC[AES256_GCM,data:RUmGv0JDfgZGL3LUQBmhhfFfjrBqDv4O3CxZTdELpDB6aKPaMTzvCO8X33YxnpWBPTulWBevtckav6amkSAp2JKtCNVDPsMt9Vaboij74E08bl2pfG6W3J9Worx7qiXJxxcdBq5QctWXquH58kdBfqbe4to/NNgIY9/bb00KIUM=,iv:YZUDr86QtlEWOTlVOK8QfTJ80Ek5/VVthGfwBysb8BI=,tag:Z3V0tRrQ6Rls5mh3Ee+UAw==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.1

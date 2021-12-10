@@ -1,0 +1,6 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: fluent-bit-config-generator
+files:
+  - fluent-bit-config.yaml

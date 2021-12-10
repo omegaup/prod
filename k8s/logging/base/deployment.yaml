@@ -49,7 +49,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:1.8
+        image: omegaup/fluent-bit:1.8.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 2020
