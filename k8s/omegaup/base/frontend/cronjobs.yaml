@@ -13,6 +13,7 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
           - name: cronjob
             image: omegaup/frontend-sidecar
@@ -20,7 +21,20 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/aggregate_feedback.py
             - --log-json
-          restartPolicy: OnFailure
+            volumeMounts:
+            - name: omegaup
+              mountPath: /opt/omegaup
+          initContainers:
+          - name: init-volume
+            image: omegaup/frontend
+            imagePullPolicy: IfNotPresent
+            command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+            volumeMounts:
+            - name: omegaup
+              mountPath: /mnt/omegaup
+          volumes:
+          - name: omegaup
+            emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -37,6 +51,7 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
           - name: cronjob
             image: omegaup/frontend-sidecar
@@ -44,7 +59,20 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/update_ranks.py
             - --log-json
-          restartPolicy: OnFailure
+            volumeMounts:
+            - name: omegaup
+              mountPath: /opt/omegaup
+          initContainers:
+          - name: init-volume
+            image: omegaup/frontend
+            imagePullPolicy: IfNotPresent
+            command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+            volumeMounts:
+            - name: omegaup
+              mountPath: /mnt/omegaup
+          volumes:
+          - name: omegaup
+            emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -61,6 +89,7 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
           - name: cronjob
             image: omegaup/frontend-sidecar
@@ -68,4 +97,17 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/assign-badges.py
             - --log-json
-          restartPolicy: OnFailure
+            volumeMounts:
+            - name: omegaup
+              mountPath: /opt/omegaup
+          initContainers:
+          - name: init-volume
+            image: omegaup/frontend
+            imagePullPolicy: IfNotPresent
+            command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+            volumeMounts:
+            - name: omegaup
+              mountPath: /mnt/omegaup
+          volumes:
+          - name: omegaup
+            emptyDir: {}
