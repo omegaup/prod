@@ -16,10 +16,11 @@ resources:
 - database.yaml
 
 generators:
-- grader-metrics-secret-generator.yaml
+- cronjobs-secret-generator.yaml
 - frontend-secret-generator.yaml
-- omegaup-secret-generator.yaml
+- grader-metrics-secret-generator.yaml
 - newrelic-secret-generator.yaml
+- omegaup-secret-generator.yaml
 - redis-secret-generator.yaml
 
 configMapGenerator:

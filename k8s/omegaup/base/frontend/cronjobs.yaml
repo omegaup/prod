@@ -24,6 +24,9 @@ spec:
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
+            - name: cronjobs-secret
+              mountPath: /home/ubuntu/.my.cnf
+              subPath: my.cnf
           initContainers:
           - name: init-volume
             image: omegaup/frontend
@@ -35,6 +38,9 @@ spec:
           volumes:
           - name: omegaup
             emptyDir: {}
+          - name: cronjobs-secret
+            secret:
+              secretName: cronjobs-secret
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -62,6 +68,9 @@ spec:
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
+            - name: cronjobs-secret
+              mountPath: /home/ubuntu/.my.cnf
+              subPath: my.cnf
           initContainers:
           - name: init-volume
             image: omegaup/frontend
@@ -73,6 +82,9 @@ spec:
           volumes:
           - name: omegaup
             emptyDir: {}
+          - name: cronjobs-secret
+            secret:
+              secretName: cronjobs-secret
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -100,6 +112,9 @@ spec:
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
+            - name: cronjobs-secret
+              mountPath: /home/ubuntu/.my.cnf
+              subPath: my.cnf
           initContainers:
           - name: init-volume
             image: omegaup/frontend
@@ -111,3 +126,6 @@ spec:
           volumes:
           - name: omegaup
             emptyDir: {}
+          - name: cronjobs-secret
+            secret:
+              secretName: cronjobs-secret

@@ -21,3 +21,8 @@ configMapGenerator:
   files:
   - nginx-config/nginx.conf
   - nginx-config/mime.types
+
+secretGenerator:
+- files:
+  - cronjobs-secret/my.cnf
+  name: cronjobs-secret
