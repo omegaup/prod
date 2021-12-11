@@ -4,6 +4,8 @@ metadata:
   name: aggregate-feedback
 spec:
   schedule: "18 10 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
@@ -48,6 +50,8 @@ metadata:
   name: update-ranks
 spec:
   schedule: "19 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
@@ -92,6 +96,8 @@ metadata:
   name: assign-badges
 spec:
   schedule: "23 9 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
