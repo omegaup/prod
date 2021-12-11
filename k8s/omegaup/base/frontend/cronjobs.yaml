@@ -5,13 +5,13 @@ metadata:
 spec:
   schedule: "18 10 * * *"
   jobTemplate:
-    metadata:
-      labels:
-        app.kubernetes.io/name: aggregate-feedback
-        app.kubernetes.io/part-of: frontend-cronjobs
-        app.kubernetes.io/component: omegaup-frontend
     spec:
       template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: aggregate-feedback
+            app.kubernetes.io/part-of: frontend-cronjobs
+            app.kubernetes.io/component: omegaup-frontend
         spec:
           restartPolicy: OnFailure
           containers:
@@ -49,13 +49,13 @@ metadata:
 spec:
   schedule: "19 * * * *"
   jobTemplate:
-    metadata:
-      labels:
-        app.kubernetes.io/name: update-ranks
-        app.kubernetes.io/part-of: frontend-cronjobs
-        app.kubernetes.io/component: omegaup-frontend
     spec:
       template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: update-ranks
+            app.kubernetes.io/part-of: frontend-cronjobs
+            app.kubernetes.io/component: omegaup-frontend
         spec:
           restartPolicy: OnFailure
           containers:
@@ -93,13 +93,13 @@ metadata:
 spec:
   schedule: "23 9 * * *"
   jobTemplate:
-    metadata:
-      labels:
-        app.kubernetes.io/name: assign-badges
-        app.kubernetes.io/part-of: frontend-cronjobs
-        app.kubernetes.io/component: omegaup-frontend
     spec:
       template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: assign-badges
+            app.kubernetes.io/part-of: frontend-cronjobs
+            app.kubernetes.io/component: omegaup-frontend
         spec:
           restartPolicy: OnFailure
           containers:
