@@ -9,6 +9,6 @@ spec:
       storage: 100Gi
   accessModes:
   - ReadWriteOnce
-  storageClassName: ""
+  storageClassName: gp2-retain
   volumeMode: Filesystem
-  volumeName: omegaup-problems-csi-pv
+  volumeName: omegaup-problems-pv
