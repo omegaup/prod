@@ -37,6 +37,18 @@ spec:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
     spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - gitserver
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: grader
         image: omegaup/backend:v1.6.3
@@ -128,6 +140,16 @@ spec:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - grader
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
         image: omegaup/gitserver:v1.8.11
