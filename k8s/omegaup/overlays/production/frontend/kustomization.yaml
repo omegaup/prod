@@ -95,8 +95,7 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newName: omegaup/maintenance
-  newTag: latest
+  newTag: 8d30f9de33c5932f394c94d99273228699830bd0
 - name: omegaup/frontend-sidecar
   newTag: 8d30f9de33c5932f394c94d99273228699830bd0
 - name: omegaup/nginx
