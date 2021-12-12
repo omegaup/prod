@@ -38,3 +38,35 @@ patches:
             resources:
               limits:
                 memory: 64Mi
+- path: gitserver-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: gitserver-deployment
+    version: v1
+- path: grader-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: grader-deployment
+    version: v1
+- path: broadcaster-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: broadcaster-deployment
+    version: v1
+- path: runner-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: runner-deployment
+    version: v1
+
+images:
+- name: omegaup/gitserver
+  newTag: v1.9.1
+- name: omegaup/backend
+  newTag: v1.9.1
+- name: omegaup/runner
+  newTag: v1.9.1

@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: grader-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/version: v1.9.1
