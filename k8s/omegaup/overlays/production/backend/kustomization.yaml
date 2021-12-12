@@ -19,6 +19,8 @@ patches:
       accessModes:
       - ReadWriteOnce
       storageClassName: gp2-retain
+      volumeMode: Filesystem
+      volumeName: pvc-2131c99a-5c2a-472f-aee8-5835b0506fc4
 
 generators:
 - grader-secret-generator.yaml
