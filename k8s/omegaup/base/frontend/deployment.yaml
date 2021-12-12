@@ -150,7 +150,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "125"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "125"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "125"
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
