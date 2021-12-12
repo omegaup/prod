@@ -5,7 +5,22 @@ namespace: omegaup
 
 resources:
 - ../../../base/backend
-- deployment.yaml
+
+patches:
+- patch: |
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: omegaup-backend-pvc
+    spec:
+      resources:
+        requests:
+          storage: 100Gi
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: gp2-retain
+      volumeMode: Filesystem
+      volumeName: omegaup-backend-pv
 
 generators:
 - grader-secret-generator.yaml
