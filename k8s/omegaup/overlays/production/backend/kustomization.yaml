@@ -22,8 +22,32 @@ patches:
       storageClassName: gp2-retain
       volumeMode: Filesystem
       volumeName: omegaup-backend-pv
+- path: gitserver-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: gitserver-deployment
+    version: v1
+- path: grader-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: grader-deployment
+    version: v1
+- path: broadcaster-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: broadcaster-deployment
+    version: v1
 
 generators:
 - grader-secret-generator.yaml
 - broadcaster-secret-generator.yaml
 - gitserver-secret-generator.yaml
+
+images:
+- name: omegaup/backend
+  newTag: v1.9.3
+- name: omegaup/gitserver
+  newTag: v1.9.3
