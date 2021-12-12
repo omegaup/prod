@@ -72,15 +72,10 @@ spec:
           mountPath: /etc/omegaup/grader
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
-        - name: omegaup-problems
-          mountPath: /var/lib/omegaup/problems.git
       volumes:
       - name: omegaup-backend
         persistentVolumeClaim:
           claimName: omegaup-backend-pvc
-      - name: omegaup-problems
-        persistentVolumeClaim:
-          claimName: omegaup-problems-pvc
       - name: grader-secret
         secret:
           secretName: grader-secret
@@ -188,15 +183,10 @@ spec:
           mountPath: /etc/omegaup/gitserver
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
-        - name: omegaup-problems
-          mountPath: /var/lib/omegaup/problems.git
       volumes:
       - name: omegaup-backend
         persistentVolumeClaim:
           claimName: omegaup-backend-pvc
-      - name: omegaup-problems
-        persistentVolumeClaim:
-          claimName: omegaup-problems-pvc
       - name: gitserver-secret
         secret:
           secretName: gitserver-secret
