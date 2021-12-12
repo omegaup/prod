@@ -19,23 +19,6 @@ patches:
       accessModes:
       - ReadWriteOnce
       storageClassName: gp2-retain
-      volumeMode: Filesystem
-      volumeName: omegaup-backend-pv
-- patch: |
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: gitserver-deployment
-    spec:
-      template:
-        spec:
-          initContainers:
-          - name: fix-perms
-            image: alpine:latest
-            command: ["sh", "-c", "find /var/lib/omegaup -type f -exec chown 1000:1000 {} \\; && chmod -R g-s /var/lib/omegaup"]
-            volumeMounts:
-            - name: omegaup-backend
-              mountPath: /var/lib/omegaup
 
 generators:
 - grader-secret-generator.yaml
