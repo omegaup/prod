@@ -5,6 +5,7 @@ namespace: omegaup
 
 resources:
 - ../../../base/backend
+- deployment.yaml
 
 patches:
 - patch: |
