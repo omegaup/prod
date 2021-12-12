@@ -79,8 +79,6 @@ spec:
       - name: grader-secret
         secret:
           secretName: grader-secret
-      securityContext:
-        fsGroup: 1000
 ---
 apiVersion: v1
 kind: Service
@@ -190,8 +188,6 @@ spec:
       - name: gitserver-secret
         secret:
           secretName: gitserver-secret
-      securityContext:
-        fsGroup: 1000
 ---
 apiVersion: v1
 kind: Service
