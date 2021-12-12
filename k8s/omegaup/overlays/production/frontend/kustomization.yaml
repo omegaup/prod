@@ -100,7 +100,7 @@ images:
   newTag: 8d30f9de33c5932f394c94d99273228699830bd0
 - name: omegaup/nginx
   newName: omegaup/maintenance
-  newTag: latest
+  newTag: v1
 - name: omegaup/php
   newName: omegaup/maintenance
-  newTag: latest
+  newTag: v1
