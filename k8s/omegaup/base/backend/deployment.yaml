@@ -185,6 +185,7 @@ spec:
       - name: omegaup-backend
         persistentVolumeClaim:
           claimName: omegaup-backend-pvc
+          readOnly: false
       - name: gitserver-secret
         secret:
           secretName: gitserver-secret
