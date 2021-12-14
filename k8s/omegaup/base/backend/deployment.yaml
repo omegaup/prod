@@ -9,6 +9,17 @@ spec:
   accessModes:
   - ReadWriteOnce
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: omegaup-grader-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+---
 apiVersion: apps/v1
 kind: Deployment
 
@@ -40,7 +51,7 @@ spec:
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 50
+          - weight: 5
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
@@ -72,12 +83,12 @@ spec:
         volumeMounts:
         - name: grader-secret
           mountPath: /etc/omegaup/grader
-        - name: omegaup-backend
+        - name: omegaup-grader
           mountPath: /var/lib/omegaup
       volumes:
-      - name: omegaup-backend
+      - name: omegaup-grader
         persistentVolumeClaim:
-          claimName: omegaup-backend-pvc
+          claimName: omegaup-grader-pvc
       - name: grader-secret
         secret:
           secretName: grader-secret
@@ -142,14 +153,16 @@ spec:
     spec:
       affinity:
         podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                - grader
-            topologyKey: "kubernetes.io/hostname"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - grader
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
         image: omegaup/gitserver:v1.8.11
@@ -189,7 +202,6 @@ spec:
       - name: omegaup-backend
         persistentVolumeClaim:
           claimName: omegaup-backend-pvc
-          readOnly: false
       - name: gitserver-secret
         secret:
           secretName: gitserver-secret

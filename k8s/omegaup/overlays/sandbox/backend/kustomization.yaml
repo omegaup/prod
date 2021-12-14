@@ -11,6 +11,7 @@ commonLabels:
   env: sandbox
 
 generators:
+- grader-secret-generator.yaml
 - gitserver-secret-generator.yaml
 
 secretGenerator:
