@@ -113,7 +113,7 @@ spec:
             image: omegaup/frontend-sidecar
             imagePullPolicy: IfNotPresent
             command:
-            - /opt/omegaup/stuff/cron/assign-badges.py
+            - /opt/omegaup/stuff/cron/assign_badges.py
             - --log-json
             volumeMounts:
             - name: omegaup
