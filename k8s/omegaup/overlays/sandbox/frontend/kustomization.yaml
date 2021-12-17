@@ -24,15 +24,15 @@ secretGenerator:
   name: redis-secret
 
 configMapGenerator:
-- name: nginx-config
-  behavior: merge
+- behavior: merge
   files:
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
-- name: fluent-bit-config
-  behavior: merge
+  name: nginx-config
+- behavior: merge
   files:
   - fluent-bit-config/fluent-bit.conf
+  name: fluent-bit-config
 
 resources:
 - ../../../base/frontend
@@ -104,10 +104,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: 120551ddd50a9d40c877587f2aed850159d92f2c
+  newTag: ffff003ed138c62b6556e8123923c3f55bc04f9e
 - name: omegaup/frontend-sidecar
-  newTag: 120551ddd50a9d40c877587f2aed850159d92f2c
+  newTag: ffff003ed138c62b6556e8123923c3f55bc04f9e
 - name: omegaup/nginx
-  newTag: 120551ddd50a9d40c877587f2aed850159d92f2c
+  newTag: ffff003ed138c62b6556e8123923c3f55bc04f9e
 - name: omegaup/php
-  newTag: 120551ddd50a9d40c877587f2aed850159d92f2c
+  newTag: ffff003ed138c62b6556e8123923c3f55bc04f9e
