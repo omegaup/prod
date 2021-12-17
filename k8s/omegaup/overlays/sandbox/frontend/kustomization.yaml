@@ -24,11 +24,15 @@ secretGenerator:
   name: redis-secret
 
 configMapGenerator:
-- behavior: merge
+- name: nginx-config
+  behavior: merge
   files:
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
-  name: nginx-config
+- name: fluent-bit-config
+  behavior: merge
+  files:
+  - fluent-bit-config/fluent-bit.conf
 
 resources:
 - ../../../base/frontend
