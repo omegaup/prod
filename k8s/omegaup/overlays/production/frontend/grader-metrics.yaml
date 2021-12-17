@@ -21,6 +21,10 @@ spec:
     spec:
       containers:
       - name: grader-metrics
+        command:
+          - "python3"
+          - "./grader_metrics.py"
+          - "--grader-prometheus=http://grader-service:6061/metrics"
         image: omegaup/grader_metrics:20211026
         env:
           - name: CONNECTION_STRING
