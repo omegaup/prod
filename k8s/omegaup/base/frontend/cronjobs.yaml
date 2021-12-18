@@ -52,6 +52,7 @@ spec:
   schedule: "19 * * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
+  suspend: true  # This cronjob is causing a lot of lock-contention.
   jobTemplate:
     spec:
       template:
