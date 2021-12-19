@@ -15,4 +15,49 @@ spec:
     protocol: TCP
     port: 11302
     targetPort: 11302
+---
+apiVersion: apps/v1
+kind: Deployment
 
+metadata:
+  name: grader-backup
+  labels:
+    app.kubernetes.io/name: grader-backup
+    app.kubernetes.io/part-of: backend-cronjobs
+    app.kubernetes.io/component: grader
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grader-backup
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 5
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - grader
+              topologyKey: "kubernetes.io/hostname"
+      serviceAccountName: grader-backup
+      containers:
+      - name: grader-backup
+        image: amazon/aws-cli:2.4.6
+        command: ['bash', '-c', 'sleep 999']
+        volumeMounts:
+        - name: omegaup-grader
+          mountPath: /var/lib/omegaup
+      volumes:
+      - name: omegaup-grader
+        persistentVolumeClaim:
+          claimName: omegaup-grader-pvc
+      securityContext:
+        fsGroup: 1000
