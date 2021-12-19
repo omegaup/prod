@@ -267,6 +267,7 @@ spec:
     spec:
       containers:
       - name: broadcaster
+        image: omegaup/backend
         command: ['/usr/bin/omegaup-broadcaster']
         ports:
         - name: broadcaster
