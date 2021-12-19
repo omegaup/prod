@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"container/heap"
 	"context"
 	"encoding/json"
 	"flag"
@@ -42,45 +43,12 @@ type fileToBackup struct {
 	bucketName string
 	bucketKey  string
 	modTime    time.Time
-	done       chan<- error
 }
 
 type backuper struct {
 	downloader *s3manager.Downloader
 	uploader   *s3manager.Uploader
-	uploadChan chan *fileToBackup
-}
-
-func (b *backuper) uploadJob(ctx context.Context, noop bool) {
-	for fileToBackup := range b.uploadChan {
-		fileToBackup.done <- (func() error {
-			select {
-			case <-ctx.Done():
-				return ctx.Err()
-			default:
-			}
-
-			f, err := os.Open(fileToBackup.path)
-			if err != nil {
-				return err
-			}
-			defer f.Close()
-
-			uploadInput := &s3manager.UploadInput{
-				Body:   f,
-				Key:    aws.String(fileToBackup.bucketKey),
-				Bucket: aws.String(fileToBackup.bucketName),
-			}
-			if !noop {
-				_, err = b.uploader.UploadWithContext(aws.Context(ctx), uploadInput)
-				if err != nil {
-					return fmt.Errorf("put s3://%s/%s: %w", *uploadInput.Bucket, *uploadInput.Key, err)
-				}
-			}
-			return nil
-		})()
-		close(fileToBackup.done)
-	}
+	workers    int
 }
 
 func (b *backuper) getBucketMetadata(bucketName string, bucketPrefix string) (bucketMetadata, error) {
@@ -102,6 +70,24 @@ func (b *backuper) getBucketMetadata(bucketName string, bucketPrefix string) (bu
 		return runsMetadata, fmt.Errorf("unmashal metadata: %w", err)
 	}
 	return runsMetadata, nil
+}
+
+type timeHeap []time.Time
+
+func (h timeHeap) Len() int           { return len(h) }
+func (h timeHeap) Less(i, j int) bool { return h[i].Before(h[j]) }
+func (h timeHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *timeHeap) Push(x interface{}) {
+	*h = append(*h, x.(time.Time))
+}
+
+func (h *timeHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
 }
 
 func (b *backuper) backup(
@@ -192,43 +178,100 @@ func (b *backuper) backup(
 	sort.Slice(filesToBackup, func(i, j int) bool {
 		return filesToBackup[i].modTime.Before(filesToBackup[j].modTime)
 	})
-	for _, fileToBackup := range filesToBackup {
-		err := (func() error {
-			select {
-			case <-ctx.Done():
-				return ctx.Err()
-			default:
-			}
+	filesToBackupChan := make(chan *fileToBackup, b.workers)
 
-			done := make(chan error, 1)
-			fileToBackup.done = done
-			log.Info("uploading file", map[string]interface{}{
-				"path":   fileToBackup.path,
-				"object": fmt.Sprintf("s3://%s/%s", bucketName, fileToBackup.bucketKey),
-			})
-			b.uploadChan <- fileToBackup
+	var l sync.RWMutex
+	var firstError error
+	var firstModTimeError time.Time
+	modTimeHeap := &timeHeap{}
 
-			select {
-			case <-ctx.Done():
-				return ctx.Err()
-			case err := <-done:
+	var wg sync.WaitGroup
+	for i := 0; i < b.workers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for fileToBackup := range filesToBackupChan {
+				err := (func() error {
+					select {
+					case <-ctx.Done():
+						return ctx.Err()
+					default:
+					}
+
+					log.Info("uploading file", map[string]interface{}{
+						"path":    fileToBackup.path,
+						"object":  fmt.Sprintf("s3://%s/%s", bucketName, fileToBackup.bucketKey),
+						"modTime": fileToBackup.modTime,
+					})
+
+					f, err := os.Open(fileToBackup.path)
+					if err != nil {
+						return err
+					}
+					defer f.Close()
+
+					uploadInput := &s3manager.UploadInput{
+						Body:   f,
+						Key:    aws.String(fileToBackup.bucketKey),
+						Bucket: aws.String(fileToBackup.bucketName),
+					}
+					if !noop {
+						_, err = b.uploader.UploadWithContext(aws.Context(ctx), uploadInput)
+						if err != nil {
+							return fmt.Errorf("put s3://%s/%s: %w", *uploadInput.Bucket, *uploadInput.Key, err)
+						}
+					}
+					return nil
+				})()
+
+				l.Lock()
+				defer l.Unlock()
 				if err != nil {
-					return err
+					log.Error("error uploading file", map[string]interface{}{
+						"path":    fileToBackup.path,
+						"object":  fmt.Sprintf("s3://%s/%s", bucketName, fileToBackup.bucketKey),
+						"modTime": fileToBackup.modTime,
+					})
+					if firstError == nil {
+						firstError = fmt.Errorf("backup %q: %w", fileToBackup.path, err)
+					}
+					if firstModTimeError.IsZero() || firstModTimeError.After(fileToBackup.modTime) {
+						firstModTimeError = fileToBackup.modTime
+					}
+					return
+				}
+				if !noop {
+					heap.Push(modTimeHeap, fileToBackup.modTime)
+					if modTimeHeap.Len() > b.workers {
+						heap.Pop(modTimeHeap)
+					}
 				}
 			}
-
-			if !noop {
-				lastUpdated = fileToBackup.modTime
-			}
-			return nil
-		})()
-
-		if err != nil {
-			return fmt.Errorf("backup: %w", err)
-		}
+		}()
 	}
 
-	return nil
+	for _, fileToBackup := range filesToBackup {
+		l.RLock()
+		le := firstError
+		l.RUnlock()
+		if le != nil {
+			break
+		}
+		filesToBackupChan <- fileToBackup
+	}
+	close(filesToBackupChan)
+
+	wg.Wait()
+
+	for modTimeHeap.Len() > 0 {
+		modTime := heap.Pop(modTimeHeap).(time.Time)
+		if !firstModTimeError.IsZero() && !firstModTimeError.After(modTime) {
+			break
+		}
+		lastUpdated = modTime
+	}
+
+	return firstError
 }
 
 func main() {
@@ -269,21 +312,15 @@ func main() {
 
 	b := backuper{
 		downloader: s3manager.NewDownloader(sess),
-		uploader:   s3manager.NewUploader(sess),
-		uploadChan: make(chan *fileToBackup, *workers),
+		uploader: s3manager.NewUploader(sess, func(u *s3manager.Uploader) {
+			// Each file to upload is tiny, we don't need any concurrency.
+			u.Concurrency = 1
+		}),
+		workers: *workers,
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-
-	var workersWG sync.WaitGroup
-	for i := 0; i < *workers; i++ {
-		workersWG.Add(1)
-		go func() {
-			defer workersWG.Done()
-			b.uploadJob(ctx, *noop)
-		}()
-	}
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -349,6 +386,4 @@ func main() {
 	}
 
 	wg.Wait()
-	close(b.uploadChan)
-	workersWG.Wait()
 }
