@@ -43,7 +43,7 @@ patches:
           - name: php
             volumeMounts:
             - name: newrelic-secret
-              mountPath: /etc/php/7.4/mods-available/newrelic.ini
+              mountPath: /etc/php/8.0/mods-available/newrelic.ini
               subPath: newrelic.ini
           volumes:
           - name: newrelic-secret
