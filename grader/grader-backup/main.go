@@ -121,6 +121,8 @@ func (b *backuper) backup(
 	log.Info("starting upload", map[string]interface{}{"lastUpdated": lastUpdated})
 
 	defer func() {
+		// This last upload should run unconditionally.
+		ctx := context.Background()
 		if lastUpdated == currentBucketMetadata.LastUpdated {
 			log.Info("nothing was uploaded", map[string]interface{}{"lastUpdated": lastUpdated})
 			return
