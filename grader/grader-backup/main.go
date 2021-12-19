@@ -48,7 +48,6 @@ type fileToBackup struct {
 type backuper struct {
 	downloader *s3manager.Downloader
 	uploader   *s3manager.Uploader
-	log        logging.Logger
 	uploadChan chan *fileToBackup
 }
 
@@ -72,7 +71,6 @@ func (b *backuper) uploadJob(ctx context.Context, noop bool) {
 				Key:    aws.String(fileToBackup.bucketKey),
 				Bucket: aws.String(fileToBackup.bucketName),
 			}
-			b.log.Info("uploading file", map[string]interface{}{"path": fileToBackup.path, "key": *uploadInput.Key})
 			if !noop {
 				_, err = b.uploader.UploadWithContext(aws.Context(ctx), uploadInput)
 				if err != nil {
@@ -108,13 +106,13 @@ func (b *backuper) getBucketMetadata(bucketName string, bucketPrefix string) (bu
 
 func (b *backuper) backup(
 	ctx context.Context,
+	log logging.Logger,
 	noop bool,
 	root string,
 	bucketName string,
 	bucketPrefix string,
 	keyNameFunc func(backupPrefix string, relpath string) string,
 ) error {
-	log := b.log.New(map[string]interface{}{"job": "submissions"})
 	currentBucketMetadata, err := b.getBucketMetadata(bucketName, bucketPrefix)
 	if err != nil {
 		return fmt.Errorf("get bucket metadata: %w", err)
@@ -147,6 +145,7 @@ func (b *backuper) backup(
 			log.Error("put bucket metadata", map[string]interface{}{"error": err})
 			return
 		}
+		log.Info("saved bucket metadata", map[string]interface{}{"lastUpdated": lastUpdated})
 	}()
 
 	// Enumerate all files.
@@ -256,9 +255,9 @@ func main() {
 					ExpectContinueTimeout: 1 * time.Second,
 				},
 			}).
-			WithLogLevel(aws.LogDebugWithRequestErrors).
+			WithLogLevel(aws.LogOff).
 			WithLogger(aws.LoggerFunc(func(args ...interface{}) {
-				log.Info(fmt.Sprintln(args...), nil)
+				log.Debug(fmt.Sprintln(args...), nil)
 			})),
 	)
 	if err != nil {
@@ -269,7 +268,6 @@ func main() {
 	b := backuper{
 		downloader: s3manager.NewDownloader(sess),
 		uploader:   s3manager.NewUploader(sess),
-		log:        log,
 		uploadChan: make(chan *fileToBackup, *workers),
 	}
 
@@ -289,7 +287,7 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		sig := <-sigs
-		b.log.Info("received signal, shutting down", map[string]interface{}{"signal": sig})
+		log.Info("received signal, shutting down", map[string]interface{}{"signal": sig})
 		cancel()
 	}()
 
@@ -303,10 +301,12 @@ func main() {
 	var wg sync.WaitGroup
 	if *backupSubmissions {
 		wg.Add(1)
+		log = log.New(map[string]interface{}{"backup": "submissions"})
 		go func() {
 			defer wg.Done()
 			err = b.backup(
 				ctx,
+				log,
 				*noop,
 				"/var/lib/omegaup/submissions",
 				"omegaup-backup",
@@ -316,7 +316,7 @@ func main() {
 				},
 			)
 			if err != nil {
-				b.log.Error("backup submissions", map[string]interface{}{"error": err})
+				log.Error("backup failed", map[string]interface{}{"error": err})
 				failed = true
 			}
 		}()
@@ -324,10 +324,12 @@ func main() {
 
 	if *backupRuns {
 		wg.Add(1)
+		log = log.New(map[string]interface{}{"backup": "runs"})
 		go func() {
 			defer wg.Done()
 			err = b.backup(
 				ctx,
+				log,
 				*noop,
 				"/var/lib/omegaup/grade",
 				"omegaup-runs",
@@ -338,7 +340,7 @@ func main() {
 				},
 			)
 			if err != nil {
-				b.log.Error("backup runs", map[string]interface{}{"error": err})
+				log.Error("backup failed", map[string]interface{}{"error": err})
 				failed = true
 			}
 		}()

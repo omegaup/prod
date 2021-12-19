@@ -50,7 +50,7 @@ spec:
       serviceAccountName: grader-backup
       containers:
       - name: grader-backup
-        image: omegaup/grader-backup:20211218
+        image: omegaup/grader-backup:20211219
         volumeMounts:
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
