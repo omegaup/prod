@@ -34,6 +34,11 @@ spec:
   strategy:
     type: Recreate
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grader-backup
+        app.kubernetes.io/part-of: backend-cronjobs
+        app.kubernetes.io/component: grader
     spec:
       affinity:
         podAffinity:
