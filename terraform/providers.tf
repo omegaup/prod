@@ -15,6 +15,6 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-	config_path    = var.k8s_config
+  config_path    = var.k8s_config
   config_context = var.k8s_context
 }
