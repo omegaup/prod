@@ -224,28 +224,29 @@ func (b *backuper) backup(
 					return nil
 				})()
 
-				l.Lock()
-				defer l.Unlock()
 				if err != nil {
 					log.Error("error uploading file", map[string]interface{}{
 						"path":    fileToBackup.path,
 						"object":  fmt.Sprintf("s3://%s/%s", bucketName, fileToBackup.bucketKey),
 						"modTime": fileToBackup.modTime,
 					})
+				}
+
+				l.Lock()
+				if err != nil {
 					if firstError == nil {
 						firstError = fmt.Errorf("backup %q: %w", fileToBackup.path, err)
 					}
 					if firstModTimeError.IsZero() || firstModTimeError.After(fileToBackup.modTime) {
 						firstModTimeError = fileToBackup.modTime
 					}
-					return
-				}
-				if !noop {
+				} else if !noop {
 					heap.Push(modTimeHeap, fileToBackup.modTime)
 					if modTimeHeap.Len() > b.workers {
 						heap.Pop(modTimeHeap)
 					}
 				}
+				l.Unlock()
 			}
 		}()
 	}
