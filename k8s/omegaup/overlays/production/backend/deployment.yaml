@@ -58,11 +58,11 @@ spec:
         image: amazon/aws-cli:2.4.6
         command: ['bash', '-c', 'sleep 999']
         volumeMounts:
-        - name: omegaup-grader
+        - name: omegaup-backend
           mountPath: /var/lib/omegaup
       volumes:
-      - name: omegaup-grader
+      - name: omegaup-backend
         persistentVolumeClaim:
-          claimName: omegaup-grader-pvc
+          claimName: omegaup-backend-pvc
       securityContext:
         fsGroup: 1000
