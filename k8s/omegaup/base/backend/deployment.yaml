@@ -35,12 +35,15 @@ spec:
     matchLabels:
       app.kubernetes.io/name: grader
   strategy:
-    type: Recreate
+    # This might cause some runners to get really confused and send the wrong
+    # thing to the wrong server, _but_ everything should be okay in the end:
+    # they will be able to retry. The important thing is that the frontend can
+    # still send submissions without interruption.
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app.kubernetes.io/name: grader
-        app.kubernetes.io/version: "v1.6.3"
         app.kubernetes.io/part-of: backend
         app.kubernetes.io/component: grader
       annotations:
@@ -61,7 +64,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: grader
-        image: omegaup/backend:v1.6.3
+        image: omegaup/backend
         command: ['/usr/bin/omegaup-grader']
         ports:
         - name: grader
@@ -84,6 +87,18 @@ spec:
           mountPath: /etc/omegaup/grader
         - name: omegaup-grader
           mountPath: /var/lib/omegaup
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: prometheus
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: prometheus
+          initialDelaySeconds: 15
+          periodSeconds: 20
       volumes:
       - name: omegaup-grader
         persistentVolumeClaim:
@@ -142,7 +157,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: gitserver
-        app.kubernetes.io/version: "v1.8.11"
         app.kubernetes.io/part-of: backend
         app.kubernetes.io/component: grader
       annotations:
@@ -163,7 +177,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: gitserver
-        image: omegaup/gitserver:v1.8.11
+        image: omegaup/gitserver
         command: ['/usr/bin/omegaup-gitserver']
         ports:
         - name: gitserver
@@ -246,7 +260,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: broadcaster
-        app.kubernetes.io/version: "v1.8.2"
         app.kubernetes.io/part-of: backend
       annotations:
         prometheus.io/port: '6060'
@@ -254,7 +267,6 @@ spec:
     spec:
       containers:
       - name: broadcaster
-        image: omegaup/backend:v1.6.3
         command: ['/usr/bin/omegaup-broadcaster']
         ports:
         - name: broadcaster

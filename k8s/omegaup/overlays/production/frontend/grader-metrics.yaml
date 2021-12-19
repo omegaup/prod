@@ -24,7 +24,7 @@ spec:
         command:
           - "python3"
           - "./grader_metrics.py"
-          - "--grader-prometheus=http://grader-service:6061/metrics"
+          - "--grader-prometheus=http://grader-service:6060/metrics"
         image: omegaup/grader_metrics:20211026
         env:
           - name: CONNECTION_STRING
