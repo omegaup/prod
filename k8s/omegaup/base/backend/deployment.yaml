@@ -43,7 +43,6 @@ spec:
         app.kubernetes.io/version: "v1.6.3"
         app.kubernetes.io/part-of: backend
         app.kubernetes.io/component: grader
-        env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
@@ -146,7 +145,6 @@ spec:
         app.kubernetes.io/version: "v1.8.11"
         app.kubernetes.io/part-of: backend
         app.kubernetes.io/component: grader
-        env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'
@@ -250,7 +248,6 @@ spec:
         app.kubernetes.io/name: broadcaster
         app.kubernetes.io/version: "v1.8.2"
         app.kubernetes.io/part-of: backend
-        env: sandbox
       annotations:
         prometheus.io/port: '6060'
         prometheus.io/scrape: 'true'

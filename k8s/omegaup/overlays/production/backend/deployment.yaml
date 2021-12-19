@@ -16,8 +16,8 @@ spec:
     port: 11302
     targetPort: 11302
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 
 metadata:
   name: grader-backup
@@ -26,13 +26,7 @@ metadata:
     app.kubernetes.io/part-of: backend-cronjobs
     app.kubernetes.io/component: grader
 spec:
-  replicas: 1
-  revisionHistoryLimit: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: grader-backup
-  strategy:
-    type: Recreate
+  backoffLimit: 4
   template:
     metadata:
       labels:
@@ -43,7 +37,7 @@ spec:
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 5
+          - weight: 50
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
@@ -55,8 +49,7 @@ spec:
       serviceAccountName: grader-backup
       containers:
       - name: grader-backup
-        image: amazon/aws-cli:2.4.6
-        command: ['bash', '-c', 'sleep 999']
+        image: omegaup/grader-backup:20211218
         volumeMounts:
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
