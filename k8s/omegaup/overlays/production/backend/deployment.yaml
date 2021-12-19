@@ -51,6 +51,9 @@ spec:
       containers:
       - name: grader-backup
         image: omegaup/grader-backup:20211219
+        command:
+        - "/usr/bin/grader-backup"
+        - "-workers=32"
         volumeMounts:
         - name: omegaup-backend
           mountPath: /var/lib/omegaup
