@@ -136,6 +136,10 @@ spec:
     protocol: TCP
     port: 36663
     targetPort: 36663
+  - name: prometheus
+    protocol: TCP
+    port: 6060
+    targetPort: 6060
 ---
 apiVersion: apps/v1
 kind: Deployment
