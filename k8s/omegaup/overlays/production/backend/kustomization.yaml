@@ -22,6 +22,20 @@ patches:
       storageClassName: gp2-retain
       volumeMode: Filesystem
       volumeName: omegaup-backend-pv
+- patch: |
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: omegaup-grader-pvc
+    spec:
+      resources:
+        requests:
+          storage: 50Gi
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: gp2-retain
+      volumeMode: Filesystem
+      volumeName: omegaup-grader-pv
 - path: gitserver-deployment.yaml
   target:
     group: apps
@@ -48,6 +62,6 @@ generators:
 
 images:
 - name: omegaup/backend
-  newTag: v1.9.3
+  newTag: v1.9.11
 - name: omegaup/gitserver
-  newTag: v1.9.3
+  newTag: v1.9.8
