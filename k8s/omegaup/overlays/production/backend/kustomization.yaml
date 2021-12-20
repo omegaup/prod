@@ -37,7 +37,7 @@ patches:
       volumeMode: Filesystem
       volumeName: omegaup-grader-pv
 - patch: |
-    apiVersion: v1
+    apiVersion: apps/v1
     kind: Deployment
     metadata:
       name: grader-deployment
