@@ -10,7 +10,7 @@ resource "aws_iam_policy" "grader_backup" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::omegaup-backup/*",
+          "arn:aws:s3:::omegaup-backup/omegaup/submissions/*",
           "arn:aws:s3:::omegaup-runs/*",
         ]
       },
