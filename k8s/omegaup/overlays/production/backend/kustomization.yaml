@@ -36,6 +36,15 @@ patches:
       storageClassName: gp2-retain
       volumeMode: Filesystem
       volumeName: omegaup-grader-pv
+- patch: |
+    apiVersion: v1
+    kind: Deployment
+    metadata:
+      name: grader-deployment
+    spec:
+      template:
+        spec:
+          serviceAccountName: grader
 - path: gitserver-deployment.yaml
   target:
     group: apps
