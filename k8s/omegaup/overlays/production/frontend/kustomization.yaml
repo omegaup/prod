@@ -120,17 +120,17 @@ patches:
             env:
             - name: MYSQL_HOSTNAME
               valueFrom:
-                secretRefKey:
+                secretKeyRef:
                   name: db-migrate-secret
                   key: mysql-hostname
             - name: MYSQL_USERNAME
               valueFrom:
-                secretRefKey:
+                secretKeyRef:
                   name: db-migrate-secret
                   key: mysql-username
             - name: MYSQL_PASSWORD
               valueFrom:
-                secretRefKey:
+                secretKeyRef:
                   name: db-migrate-secret
                   key: mysql-password
 - path: frontend-deployment.yaml
