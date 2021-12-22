@@ -57,7 +57,26 @@ patches:
     kind: Ingress
     name: frontend-ingress
     version: v1
-
+- patch: |-
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: db-migrate
+    spec:
+      template:
+        spec:
+          containers:
+          - name: db-migrate
+            command: [
+              '/opt/omegaup/stuff/db-migrate.py',
+              '--verbose',
+              '--username=root',
+              '--password=omegaup',
+              '--hostname=mysql-service',
+              'migrate',
+              '--databases=omegaup',
+              '--development-environment',
+            ]
 images:
 - name: omegaup/frontend
   newTag: latest-main

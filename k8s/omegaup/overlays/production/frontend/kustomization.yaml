@@ -17,6 +17,7 @@ resources:
 
 generators:
 - cronjobs-secret-generator.yaml
+- db-migrate-secret-generator.yaml
 - frontend-secret-generator.yaml
 - grader-metrics-secret-generator.yaml
 - newrelic-secret-generator.yaml
@@ -97,6 +98,41 @@ patches:
       - hosts:
         - k8s.omegaup.com
         secretName: frontend-ingress-compat-cert
+- patch: |-
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: db-migrate
+    spec:
+      template:
+        spec:
+          containers:
+          - name: db-migrate
+            command: [
+              '/opt/omegaup/stuff/db-migrate.py',
+              '--verbose',
+              '--username=$(MYSQL_USERNAME)',
+              '--password=$(MYSQL_PASSWORD)',
+              '--hostname=$(MYSQL_HOSTNAME)',
+              'migrate',
+              '--databases=omegaup',
+            ]
+            env:
+            - name: MYSQL_HOSTNAME
+              valueFrom:
+                secretRefKey:
+                  name: db-migrate-secret
+                  key: mysql-hostname
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretRefKey:
+                  name: db-migrate-secret
+                  key: mysql-username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretRefKey:
+                  name: db-migrate-secret
+                  key: mysql-password
 - path: frontend-deployment.yaml
   target:
     group: apps
