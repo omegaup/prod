@@ -6,6 +6,7 @@ namespace: omegaup
 resources:
 - ../../../base/backend
 - deployment.yaml
+- grader-metrics.yaml
 
 patches:
 - patch: |
@@ -66,6 +67,7 @@ patches:
 
 generators:
 - grader-secret-generator.yaml
+- grader-metrics-secret-generator.yaml
 - broadcaster-secret-generator.yaml
 - gitserver-secret-generator.yaml
 

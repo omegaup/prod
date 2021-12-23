@@ -12,14 +12,12 @@ commonLabels:
 
 resources:
 - ../../../base/frontend
-- grader-metrics.yaml
 - database.yaml
 
 generators:
 - cronjobs-secret-generator.yaml
 - db-migrate-secret-generator.yaml
 - frontend-secret-generator.yaml
-- grader-metrics-secret-generator.yaml
 - newrelic-secret-generator.yaml
 - omegaup-secret-generator.yaml
 - redis-secret-generator.yaml
