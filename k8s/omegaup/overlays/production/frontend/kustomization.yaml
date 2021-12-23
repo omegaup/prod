@@ -16,7 +16,6 @@ resources:
 
 generators:
 - cronjobs-secret-generator.yaml
-- db-migrate-secret-generator.yaml
 - frontend-secret-generator.yaml
 - newrelic-secret-generator.yaml
 - omegaup-secret-generator.yaml
@@ -108,29 +107,18 @@ patches:
           - name: db-migrate
             command: [
               '/opt/omegaup/stuff/db-migrate.py',
-              '--verbose',
-              '--username=$(MYSQL_USERNAME)',
-              '--password=$(MYSQL_PASSWORD)',
-              '--hostname=$(MYSQL_HOSTNAME)',
+              '--lower-timeout=aws',
               'migrate',
               '--databases=omegaup',
             ]
-            env:
-            - name: MYSQL_HOSTNAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-migrate-secret
-                  key: mysql-hostname
-            - name: MYSQL_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-migrate-secret
-                  key: mysql-username
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-migrate-secret
-                  key: mysql-password
+            volumeMounts:
+            - name: cronjobs-secret
+              mountPath: /home/ubuntu/.my.cnf
+              subPath: my.cnf
+          volumes:
+          - name: cronjobs-secret
+            secret:
+              secretName: cronjobs-secret
 - path: frontend-deployment.yaml
   target:
     group: apps
