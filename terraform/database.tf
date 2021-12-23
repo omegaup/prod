@@ -67,6 +67,28 @@ resource "aws_db_instance" "omegaup" {
   }
 }
 
+resource "aws_db_parameter_group" "omegaup_frontend" {
+  name        = "omegaup-frontend"
+  description = "The parameter group for the omegaup database"
+  family      = "mysql8.0"
+
+  parameter {
+    apply_method = "immediate"
+    name         = "collation_connection"
+    value        = "utf8mb4_unicode_ci"
+  }
+  parameter {
+    apply_method = "immediate"
+    name         = "default_collation_for_utf8mb4"
+    value        = "utf8mb4_general_ci"
+  }
+  parameter {
+    apply_method = "immediate"
+    name         = "slow_query_log"
+    value        = "1"
+  }
+}
+
 resource "aws_db_instance" "omegaup_readonly" {
   identifier          = "omegaup-db-readonly"
   name                = "omegaup"
@@ -74,5 +96,6 @@ resource "aws_db_instance" "omegaup_readonly" {
   replicate_source_db = aws_db_instance.omegaup.id
   availability_zone   = "us-east-1a"
   engine              = "mysql"
-  engine_version      = "8.0.27"
+  engine_version      = "8.0.23"
+  skip_final_snapshot = true
 }
