@@ -116,6 +116,7 @@ patches:
           - name: db-migrate
             command: [
               '/opt/omegaup/stuff/db-migrate.py',
+              '--verbose',
               '--lower-timeout=aws',
               'migrate',
               '--databases=omegaup',
