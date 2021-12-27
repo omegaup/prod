@@ -28,6 +28,9 @@ configMapGenerator:
   - nginx-config/grader-upstream.conf
   name: nginx-config
 
+        # Now that we have mandated that database migrations should be
+        # forwards-compatible, this can be run concurrently with the rest of
+        # the deployments.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -134,10 +137,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: 7b11ab1fbfb2298d7b87ca6f796b3e373f9bd046
+  newTag: d7edef989225da3fb21a9fed305e10708be5c881
 - name: omegaup/frontend-sidecar
-  newTag: 7b11ab1fbfb2298d7b87ca6f796b3e373f9bd046
+  newTag: d7edef989225da3fb21a9fed305e10708be5c881
 - name: omegaup/nginx
-  newTag: 7b11ab1fbfb2298d7b87ca6f796b3e373f9bd046
+  newTag: d7edef989225da3fb21a9fed305e10708be5c881
 - name: omegaup/php
-  newTag: 7b11ab1fbfb2298d7b87ca6f796b3e373f9bd046
+  newTag: d7edef989225da3fb21a9fed305e10708be5c881
