@@ -96,7 +96,8 @@ spec:
       - name: init-volume
         image: omegaup/frontend
         imagePullPolicy: IfNotPresent
-        command: ['bash' '-c', 'rsync -az /opt/omegaup/ /mnt/omegaup/ && rsync -az /var/lib/omegaup/ /mnt/lib/']
+        # TODO: Make this ; an &&.
+        command: ['bash', '-c', 'rsync -az /var/lib/omegaup/ /mnt/lib/ ; rsync -az /opt/omegaup/ /mnt/omegaup/']
         volumeMounts:
         - name: omegaup
           mountPath: /mnt/omegaup
