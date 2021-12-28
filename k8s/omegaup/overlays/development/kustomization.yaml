@@ -70,6 +70,9 @@ patches:
             command: [
               '/opt/omegaup/stuff/db-migrate.py',
               '--verbose',
+              '--log-json',
+              '--lower-timeout',
+              '--kill-blocking-connections',
               '--username=root',
               '--password=omegaup',
               '--hostname=mysql-service',

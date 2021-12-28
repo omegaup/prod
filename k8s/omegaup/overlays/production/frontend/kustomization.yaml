@@ -28,9 +28,6 @@ configMapGenerator:
   - nginx-config/grader-upstream.conf
   name: nginx-config
 
-        # Now that we have mandated that database migrations should be
-        # forwards-compatible, this can be run concurrently with the rest of
-        # the deployments.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -103,11 +100,6 @@ patches:
     kind: Job
     metadata:
       name: db-migrate
-      annotations:
-        # Now that we have mandated that database migrations should be
-        # forwards-compatible, this can be run concurrently with the rest of
-        # the deployments.
-        argocd.argoproj.io/hook: Sync
     spec:
       template:
         spec:
@@ -117,7 +109,10 @@ patches:
             command: [
               '/opt/omegaup/stuff/db-migrate.py',
               '--verbose',
-              '--lower-timeout=aws',
+              '--log-json',
+              '--lower-timeout',
+              '--kill-blocking-connections',
+              '--aws',
               'migrate',
               '--databases=omegaup',
             ]

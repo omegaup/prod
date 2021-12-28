@@ -4,7 +4,10 @@ kind: Job
 metadata:
   name: db-migrate
   annotations:
-    argocd.argoproj.io/hook: PreSync
+    # Now that we have mandated that database migrations should be
+    # forwards-compatible, this can be run concurrently with the rest of
+    # the deployments.
+    argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   template:
@@ -20,6 +23,9 @@ spec:
         command: [
           '/opt/omegaup/stuff/db-migrate.py',
           '--verbose',
+          '--log-json',
+          '--lower-timeout',
+          '--kill-blocking-connections',
           '--username=root',
           '--password=omegaup',
           '--hostname=mysql-service',
