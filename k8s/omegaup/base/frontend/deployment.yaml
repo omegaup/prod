@@ -69,6 +69,8 @@ spec:
           mountPath: /etc/nginx
         - name: omegaup
           mountPath: /opt/omegaup
+        - name: varlibomegaup
+          mountPath: /var/lib/omegaup
         - name: varlog
           mountPath: /var/log
         - name: runphp
@@ -94,10 +96,12 @@ spec:
       - name: init-volume
         image: omegaup/frontend
         imagePullPolicy: IfNotPresent
-        command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+        command: ['bash' '-c', 'rsync -az /opt/omegaup/ /mnt/omegaup/ && rsync -az /var/lib/omegaup/ /mnt/lib/']
         volumeMounts:
         - name: omegaup
           mountPath: /mnt/omegaup
+        - name: varlibomegaup
+          mountPath: /mnt/lib
       volumes:
       - name: frontend-secret
         secret:
@@ -117,6 +121,8 @@ spec:
       - name: varlog
         emptyDir: {}
       - name: omegaup
+        emptyDir: {}
+      - name: varlibomegaup
         emptyDir: {}
       - name: runphp
         emptyDir: {}
