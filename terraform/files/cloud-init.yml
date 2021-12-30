@@ -1,0 +1,83 @@
+#cloud-config
+users:
+  - name: lhchavez
+    home: /home/lhchavez
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnjhoOKyTPYdNViybSdZUobS5WsOuhZnGO3QWQqI8K5+op8gEzBJaV1XfwVMewbBFv1t8NNANBlqbkjAGwrbLVixz156fcnTpVKaXPF7L31UTSv3x3/7gjRkAnNAexVNQOR5uLzEqaC1WLzTZf1iN4VMLskmuEE1PYAR7JBoE7jwKc5w67Iu0aELhiZ2nGSXkNU9fuSA3O/EFRQMtUVY8KvRuCN5iSTuHhL3vm4TE39ZYfSCsPok0PAbnR0eIFObQYkp/EaJZitqALmxr9gFsK5AxlfbbGiOXlUP1et4tA1/6ep3CPCnUy6TNCwKuOdC8kMzHg9tYIl0qtpgibuLU3 lhchavez@lhc-desktop
+    sudo: ALL=(ALL) NOPASSWD:ALL
+  - name: omegaup
+    home: /var/lib/omegaup
+    shell: /usr/sbin/nologin
+
+runcmd:
+  - |
+    # Create the directory layout for configuration and runtime files.
+    mkdir -p /etc/omegaup/runner /etc/omegaup/logslurp /var/log/omegaup /var/lib/omegaup
+
+    # Get the instance's fully-qualified domain name.
+    location="$(curl \
+                  --silent \
+                  --header Metadata:true \
+                  --noproxy "*" \
+                  'http://169.254.169.254/metadata/instance?api-version=2020-09-01'  | \
+                jq -r '.compute.location')"
+    hostname="$(hostname | sed -e 's/^\(.*[^0]\)0\+\([0-9]\+\)$/vm\2.omegaup-runner/')"
+    fqdn="${hostname}.${location}.cloudapp.azure.com"
+    # Get the New Relic license.
+    auth_token="$(curl \
+                    --silent \
+                    --header Metadata:true \
+                    --noproxy "*" \
+                    'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net' | \
+                  jq -r '.access_token')"
+    newrelic_license="$(curl \
+                          --header "Authorization: Bearer ${auth_token}" \
+                          'https://omegaup-runner-vault.vault.azure.net/secrets/omegaup-runner-newrelic-license?api-version=7.2' | \
+                      jq -r '.value')"
+    cat <<EOF > /etc/omegaup/runner/config.json
+    {
+            "Logging": {
+                    "JSON": true
+            },
+            "NewRelic": {
+                    "AppName": "runner.omegaup.com",
+                    "License": "${newrelic_license}"
+            },
+            "Runner": {
+                    "Hostname": "${fqdn}",
+                    "RuntimePath": "/var/lib/omegaup/runner",
+                    "GraderURL": "https://grader.omegaup.com:11302"
+            },
+            "TLS": {
+                    "CertFile": "/etc/omegaup/runner/certificate.pem",
+                    "KeyFile": "/etc/omegaup/runner/key.pem"
+            }
+    }
+    EOF
+    cat <<EOF > /etc/td-agent-bit/newrelic_output.conf
+    [OUTPUT]
+        name       newrelic
+        match      *
+        licenseKey ${newrelic_license}
+    EOF
+
+    # Split the certificate into private key and certificate chain.
+    openssl pkey \
+        -in /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner \
+        -out /etc/omegaup/runner/key.pem
+    openssl crl2pkcs7 \
+        -nocrl \
+        -certfile /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner | \
+      openssl pkcs7 -print_certs | \
+      grep '^[^,]\+$' > /etc/omegaup/runner/certificate.pem
+
+    # Fix all the permissions
+    chmod 0600 /etc/omegaup/runner/key.pem /etc/omegaup/runner/certificate.pem
+    chown -R omegaup:omegaup /etc/omegaup /var/log/omegaup /var/lib/omegaup
+
+    # And finally, enable all the services so that they can start running.
+    /bin/systemctl daemon-reload
+    /bin/systemctl enable omegaup-runner
+    /bin/systemctl start omegaup-runner
+    /bin/systemctl restart td-agent-bit

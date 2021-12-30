@@ -20,6 +20,43 @@ provider "registry.terraform.io/hashicorp/aws" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/azuread" {
+  version     = "2.0.1"
+  constraints = "~> 2.0.0"
+  hashes = [
+    "h1:LKQDqKlMbMB5SOgwlIUCBaPpT6NiAK3rwaVNUjBFOic=",
+    "zh:045a5f5450eaf707b1a2c05188fa914f0364420da9d58c0bd29abc2985b838a8",
+    "zh:0aaf1bf334a55953289f0aead9cfaa2aaf37ffa7c4b6ca229d14918f18d006f9",
+    "zh:17914f4b85a18337e8e5acd644bd10c3e4309138983a9809e7a72bcc767835ff",
+    "zh:194dca0bdb636ce4289f5ff015623535898bdac26403a03649645cd4194b54ee",
+    "zh:53e1491141f23de8400092b5e17bf6e3ee8096dae6b58af2f8ca580337e31898",
+    "zh:656c729307e41f2f98bf5db634b74929d372189ff6dcb00e7d3370a7a36f3bd6",
+    "zh:7b8689cf5c4440ff0e21db9f9633478d50d220514fa9cd413ac2b7c93c7038e2",
+    "zh:cecd2259c04797297868236055d0f5808794677c43fe0c1e11d30f89f539b362",
+    "zh:da2a93d14318d9cace06aad77a0069ee0a0adb9e8337dac85434953db74dfa04",
+    "zh:eb127f8d11fc24f7070c14b6665f08bafd30e4038c1e4f5582a155f53ec795f6",
+    "zh:f99c245c80c5c4c418ef6f7b219482e56c714db65f970083bb287104a333e405",
+  ]
+}
+
+provider "registry.terraform.io/hashicorp/azurerm" {
+  version = "2.90.0"
+  hashes = [
+    "h1:xVG6gA/U5FgStJebgKdKJP57aDfAUHL5kD1UClXHV0w=",
+    "zh:11e484585bc324e56ece3d75bd1d8371fc1d56501fb7f15542be0185eaf2c05e",
+    "zh:189f11bba0665a45405d12b66ac789de87582d23863f0599016bcc28f399a4e3",
+    "zh:1e4103ab153f16b614c98898d4f4d46c953687a35a0381e05b4a2958b27165b8",
+    "zh:1f8bb4631f8206736e1ff560b59453d9cc6d7dd0598072feaba10b6833cda1c4",
+    "zh:424acd64ee42cf3cc78919dc32b07a8dc4e7e9cc103eca37cce2f256a48f5e6d",
+    "zh:4ce7c5469e1fbed3066bb05c3c4ad8a194b76a4d01e2bbd7093537aa3eafeb0a",
+    "zh:6b4b592f1f3684a4df9fad146b4cbe125fffbadc2239f7011c0390199094676f",
+    "zh:8525bb868cd3e117fb1278e54c899a22ab6533c134779a64c224e651983fc253",
+    "zh:9873ee69ee94059af70ee544e0b27b68064dcc21e4d2912aa7186f46acca47c1",
+    "zh:af305aa28b532c78a1c51cf707a02bd1993ff1b8e7b5d656db8043c3eb484eab",
+    "zh:f96ecf6c3f208ad50af0959042e5fe1730b2bf26582430a61aac5b2a970917c7",
+  ]
+}
+
 provider "registry.terraform.io/hashicorp/kubernetes" {
   version = "2.7.1"
   hashes = [
