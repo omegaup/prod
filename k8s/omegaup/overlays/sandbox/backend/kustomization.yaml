@@ -13,13 +13,7 @@ commonLabels:
 generators:
 - grader-secret-generator.yaml
 - gitserver-secret-generator.yaml
-
-secretGenerator:
-- files:
-  - runner-secret/config.json
-  - runner-secret/certificate.pem
-  - runner-secret/key.pem
-  name: runner-secret
+- runner-secret-generator.yaml
 
 resources:
 - ../../../base/backend
