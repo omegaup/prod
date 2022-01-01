@@ -73,6 +73,6 @@ generators:
 
 images:
 - name: omegaup/backend
-  newTag: v1.9.15
+  newTag: v1.9.17
 - name: omegaup/gitserver
   newTag: v1.9.8
