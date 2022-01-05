@@ -157,7 +157,7 @@ metadata:
   labels:
     app.kubernetes.io/name: static
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 1
   selector:
     matchLabels:
@@ -212,7 +212,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "125"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "125"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "125"
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - host: omegaup.com
