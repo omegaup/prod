@@ -78,7 +78,21 @@ patches:
                   name: frontend-service
                   port:
                     number: 8000
-            - path: /cpp/
+            - path: /docs/cpp/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
+            - path: /docs/java/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
+            - path: /docs/pas/
               pathType: Prefix
               backend:
                 service:
@@ -95,7 +109,21 @@ patches:
                   name: frontend-service
                   port:
                     number: 8000
-            - path: /cpp/
+            - path: /docs/cpp/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
+            - path: /docs/java/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
+            - path: /docs/pas/
               pathType: Prefix
               backend:
                 service:
