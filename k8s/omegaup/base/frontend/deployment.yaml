@@ -150,6 +150,58 @@ spec:
     clientIP:
       timeoutSeconds: 60
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-deployment
+  labels:
+    app.kubernetes.io/name: static
+spec:
+  replicas: 2
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: static
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: static
+        app.kubernetes.io/part-of: static
+        app.kubernetes.io/component: omegaup-frontend
+    spec:
+      containers:
+      - name: static
+        image: omegaup/static:20220104
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-service
+  labels:
+    app.kubernetes.io/name: static
+spec:
+  selector:
+    app.kubernetes.io/name: static
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 60
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -173,3 +225,10 @@ spec:
             name: frontend-service
             port:
               number: 8000
+      - path: /cpp/
+        pathType: Prefix
+        backend:
+          service:
+            name: static-service
+            port:
+              number: 80

@@ -67,6 +67,13 @@ patches:
                   name: frontend-service
                   port:
                     number: 8000
+            - path: /cpp/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
         - host: www.omegaup.com
           http:
             paths:
@@ -77,6 +84,13 @@ patches:
                   name: frontend-service
                   port:
                     number: 8000
+            - path: /cpp/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
         - host: k8s.omegaup.com
           http:
             paths:
@@ -87,6 +101,13 @@ patches:
                   name: frontend-service
                   port:
                     number: 8000
+            - path: /cpp/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
       tls:
       - hosts:
         - omegaup.com
