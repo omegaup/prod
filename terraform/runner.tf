@@ -290,7 +290,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "runner_vmss" {
     pause_time_between_batches              = "PT2S"
   }
 
-  source_image_id = azurerm_shared_image_version.runner_v1_0_1.id
+  source_image_id = azurerm_shared_image_version.runner.id
 
   lifecycle {
     ignore_changes = [
