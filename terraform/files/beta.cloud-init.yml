@@ -12,6 +12,36 @@ users:
 
 write_files:
   - content: |
+      [Unit]
+      Description=omegaUp runner
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=omegaup
+      Group=omegaup
+      PermissionsStartOnly=true
+      ExecStartPre=/var/lib/omegajail/bin/omegajail-setup
+      ExecStart=/usr/bin/omegaup-runner
+      ExecReload=/bin/kill -s HUP $MAINPID
+      WorkingDirectory=/var/lib/omegaup
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    path: /etc/systemd/system/omegaup-runner.service
+    permissions: 0644
+    owner: root:root
+  - content: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEICJWG5OCuJ+8pEkiLpvqQFlspyVcuXT+ruLlycHs0zVKoAoGCCqGSM49
+      AwEHoUQDQgAEPwflRMePGG/+iWzp4hl9JupJLaDlgrX6hrGmNIr5+bgERu+jlwuc
+      pQW6XdLpu9oLyJhq8YZiwPh4xTC3ZyUocw==
+      -----END EC PRIVATE KEY-----
+    path: /etc/omegaup/runner/key.pem
+    permissions: '0600'
+    owner: omegaup:omegaup
+  - content: |
       -----BEGIN CERTIFICATE-----
       MIIBfjCCASWgAwIBAgIUPCHAOcaWTC8xh6dobjNVhFkraPcwCgYIKoZIzj0EAwIw
       OjELMAkGA1UEBhMCTVgxKzApBgNVBAMMIm9tZWdhVXAgVGVzdCBDZXJ0aWZpY2F0
@@ -36,15 +66,6 @@ write_files:
       fZTH2+75NaOeBd1DELQhna174leterHh5/Tym4U=
       -----END CERTIFICATE-----
     path: /etc/omegaup/runner/certificate.pem
-    permissions: '0600'
-    owner: omegaup:omegaup
-  - content: |
-      -----BEGIN EC PRIVATE KEY-----
-      MHcCAQEEICJWG5OCuJ+8pEkiLpvqQFlspyVcuXT+ruLlycHs0zVKoAoGCCqGSM49
-      AwEHoUQDQgAEPwflRMePGG/+iWzp4hl9JupJLaDlgrX6hrGmNIr5+bgERu+jlwuc
-      pQW6XdLpu9oLyJhq8YZiwPh4xTC3ZyUocw==
-      -----END EC PRIVATE KEY-----
-    path: /etc/omegaup/runner/key.pem
     permissions: '0600'
     owner: omegaup:omegaup
 
