@@ -1,0 +1,96 @@
+#cloud-config
+users:
+  - name: lhchavez
+    home: /home/lhchavez
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnjhoOKyTPYdNViybSdZUobS5WsOuhZnGO3QWQqI8K5+op8gEzBJaV1XfwVMewbBFv1t8NNANBlqbkjAGwrbLVixz156fcnTpVKaXPF7L31UTSv3x3/7gjRkAnNAexVNQOR5uLzEqaC1WLzTZf1iN4VMLskmuEE1PYAR7JBoE7jwKc5w67Iu0aELhiZ2nGSXkNU9fuSA3O/EFRQMtUVY8KvRuCN5iSTuHhL3vm4TE39ZYfSCsPok0PAbnR0eIFObQYkp/EaJZitqALmxr9gFsK5AxlfbbGiOXlUP1et4tA1/6ep3CPCnUy6TNCwKuOdC8kMzHg9tYIl0qtpgibuLU3 lhchavez@lhc-desktop
+    sudo: ALL=(ALL) NOPASSWD:ALL
+  - name: omegaup
+    home: /var/lib/omegaup
+    shell: /usr/sbin/nologin
+
+write_files:
+  - content: |
+      -----BEGIN CERTIFICATE-----
+      MIIBfjCCASWgAwIBAgIUPCHAOcaWTC8xh6dobjNVhFkraPcwCgYIKoZIzj0EAwIw
+      OjELMAkGA1UEBhMCTVgxKzApBgNVBAMMIm9tZWdhVXAgVGVzdCBDZXJ0aWZpY2F0
+      ZSBBdXRob3JpdHkwHhcNMjExMTA2MDIxOTIyWhcNMzExMTA0MDIxOTIyWjAmMQsw
+      CQYDVQQGEwJNWDEXMBUGA1UEAwwOcnVubmVyLXNlcnZpY2UwWTATBgcqhkjOPQIB
+      BggqhkjOPQMBBwNCAAQ/B+VEx48Yb/6JbOniGX0m6kktoOWCtfqGsaY0ivn5uARG
+      76OXC5ylBbpd0um72gvImGrxhmLA+HjFMLdnJShzox0wGzAZBgNVHREEEjAQgg5y
+      dW5uZXItc2VydmljZTAKBggqhkjOPQQDAgNHADBEAiBmEbNMpXh8TvdG2fFlcLrH
+      M6v8DLKJIzsSi7pwgGUkYgIgBQFMCl5XUW+Kpv0t5ccE3da5dos5ZW3QzE0TKb/W
+      PjU=
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIByTCCAW+gAwIBAgIUW8Z/9G/Y5HuRjbskztnYTCRfFcUwCgYIKoZIzj0EAwIw
+      OjELMAkGA1UEBhMCTVgxKzApBgNVBAMMIm9tZWdhVXAgVGVzdCBDZXJ0aWZpY2F0
+      ZSBBdXRob3JpdHkwHhcNMjExMTA2MDIxNzE5WhcNMzEwODA2MDIxNzE5WjA6MQsw
+      CQYDVQQGEwJNWDErMCkGA1UEAwwib21lZ2FVcCBUZXN0IENlcnRpZmljYXRlIEF1
+      dGhvcml0eTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJYsmL9fm5L+0llcnMVn
+      /rCuPYrTdVDgqKNCKUglnHQtIquTYt4kNEAp1jO/mVeSHb6tLR9ofHTS0QiNtAhI
+      fJejUzBRMB0GA1UdDgQWBBREKU1XpoBRc1YkU7rAJA5LfwiVVTAfBgNVHSMEGDAW
+      gBREKU1XpoBRc1YkU7rAJA5LfwiVVTAPBgNVHRMBAf8EBTADAQH/MAoGCCqGSM49
+      BAMCA0gAMEUCIEqvEQIEkF9FFQ9tCVq6u4ZstOJdQPZMY1UCo9Mj1Ox0AiEAq42w
+      fZTH2+75NaOeBd1DELQhna174leterHh5/Tym4U=
+      -----END CERTIFICATE-----
+    path: /etc/omegaup/runner/certificate.pem
+    permissions: '0600'
+    owner: omegaup:omegaup
+  - content: |
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEICJWG5OCuJ+8pEkiLpvqQFlspyVcuXT+ruLlycHs0zVKoAoGCCqGSM49
+      AwEHoUQDQgAEPwflRMePGG/+iWzp4hl9JupJLaDlgrX6hrGmNIr5+bgERu+jlwuc
+      pQW6XdLpu9oLyJhq8YZiwPh4xTC3ZyUocw==
+      -----END EC PRIVATE KEY-----
+    path: /etc/omegaup/runner/key.pem
+    permissions: '0600'
+    owner: omegaup:omegaup
+
+runcmd:
+  - |
+    # Download all the payloads from GitHub and extract them.
+    for url in $(echo "https://omegaup-omegajail.s3.amazonaws.com/v3.7.0/omegajail-focal-rootfs-x86_64.tar.xz
+    https://omegaup-omegajail.s3.amazonaws.com/v3.7.0/omegajail-focal-distrib-x86_64.tar.xz
+    https://github.com/omegaup/quark/releases/download/v1.9.19/omegaup-runner.tar.xz"); do
+      echo "downloading ${url}..."
+      curl --silent --location --url "${url}" | tar xJ -C /
+    done
+
+    # Create the directory layout for configuration and runtime files.
+    mkdir -p /etc/omegaup/runner /var/log/omegaup /var/lib/omegaup
+
+    # Get the instance's fully-qualified domain name.
+    location="$(curl \
+                  --silent \
+                  --header Metadata:true \
+                  --noproxy "*" \
+                  'http://169.254.169.254/metadata/instance?api-version=2020-09-01'  | \
+                jq -r '.compute.location')"
+    hostname="$(hostname | sed -e 's/^\(.*[^0]\)0\+\([0-9]\+\)$/vm\2.omegaup-runner/')"
+    fqdn="${hostname}.${location}.cloudapp.azure.com"
+    cat <<EOF > /etc/omegaup/runner/config.json
+    {
+            "Logging": {
+                    "JSON": true
+            },
+            "Runner": {
+                    "Hostname": "${fqdn}",
+                    "RuntimePath": "/var/lib/omegaup/runner",
+                    "GraderURL": "https://collider.lhchavez.com:11302"
+            },
+            "TLS": {
+                    "CertFile": "/etc/omegaup/runner/certificate.pem",
+                    "KeyFile": "/etc/omegaup/runner/key.pem"
+            }
+    }
+    EOF
+
+    # Fix all the permissions
+    chown -R omegaup:omegaup /etc/omegaup /var/log/omegaup /var/lib/omegaup
+
+    # And finally, enable all the services so that they can start running.
+    /bin/systemctl daemon-reload
+    /bin/systemctl enable omegaup-runner
+    /bin/systemctl start omegaup-runner

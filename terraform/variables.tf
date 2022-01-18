@@ -22,3 +22,8 @@ variable "az_runner_image" {
   type    = bool
   default = false
 }
+
+variable "runner_beta" {
+  type    = bool
+  default = false
+}
