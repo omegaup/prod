@@ -166,8 +166,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "runner_beta_vmss" {
 
   rolling_upgrade_policy {
     max_batch_instance_percent              = 20
-    max_unhealthy_instance_percent          = 20
-    max_unhealthy_upgraded_instance_percent = 20
+    max_unhealthy_instance_percent          = 100
+    max_unhealthy_upgraded_instance_percent = 100
     pause_time_between_batches              = "PT2S"
   }
 
