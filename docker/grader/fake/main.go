@@ -243,12 +243,14 @@ func (i *inputManager) get(problem, version string) (inputEntry, error) {
 }
 
 type handler struct {
-	db           *gorm.DB
-	dbLock       sync.RWMutex
-	log          logging.Logger
-	downloader   *s3manager.Downloader
-	inputManager *inputManager
-	htmlTemplate *template.Template
+	db                *gorm.DB
+	dbLock            sync.RWMutex
+	log               logging.Logger
+	oldSandboxVersion string
+	newSandboxVersion string
+	downloader        *s3manager.Downloader
+	inputManager      *inputManager
+	htmlTemplate      *template.Template
 }
 
 var _ http.Handler = (*handler)(nil)
@@ -356,10 +358,10 @@ func (h *handler) handleRunRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	if before {
 		run.AttemptID = 10 * submission.SubmissionID
-		run.SandboxVersion = "production"
+		run.SandboxVersion = h.oldSandboxVersion
 	} else {
 		run.AttemptID = 10*submission.SubmissionID + 1
-		run.SandboxVersion = "3.7.0"
+		run.SandboxVersion = h.newSandboxVersion
 	}
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -708,6 +710,8 @@ func main() {
 	gitserverURL := flag.String("gitserver-url", "http://gitserver-service:33861/", "The gitserver token")
 	gitserverToken := flag.String("gitserver-token", "", "The gitserver token")
 	databaseName := flag.String("database", "submissions.db", "The database")
+	oldSandboxVersion := flag.String("old-sandbox-version", "production", "The old version of the runner")
+	newSandboxVersion := flag.String("new-sandbox-version", "3.8.0", "The new version of the runner")
 	report := flag.Bool("report", false, "Only run the report")
 	flag.Parse()
 
@@ -770,11 +774,13 @@ func main() {
 	s := http.Server{
 		Addr: fmt.Sprintf(":%d", *port),
 		Handler: loggingMiddleware(log, &handler{
-			db:           db,
-			log:          log,
-			downloader:   downloader,
-			inputManager: inputManager,
-			htmlTemplate: htmlTemplate,
+			db:                db,
+			log:               log,
+			downloader:        downloader,
+			oldSandboxVersion: *oldSandboxVersion,
+			newSandboxVersion: *newSandboxVersion,
+			inputManager:      inputManager,
+			htmlTemplate:      htmlTemplate,
 		}),
 	}
 	serverDone := make(chan struct{})

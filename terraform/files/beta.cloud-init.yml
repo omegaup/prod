@@ -85,14 +85,14 @@ runcmd:
       curl --silent --location --url "${url}" | tar xJ -C /var/lib/omegajail/production --strip-components=3
     done
 
-    mkdir -p /var/lib/omegajail/3.7.0
-    for url in $(echo "https://omegaup-omegajail.s3.amazonaws.com/v3.7.0/omegajail-focal-rootfs-x86_64.tar.xz
-    https://omegaup-omegajail.s3.amazonaws.com/v3.7.0/omegajail-focal-distrib-x86_64.tar.xz"); do
+    mkdir -p /var/lib/omegajail/3.8.0
+    for url in $(echo "https://omegaup-omegajail.s3.amazonaws.com/v3.8.0/omegajail-focal-rootfs-x86_64.tar.xz
+    https://omegaup-omegajail.s3.amazonaws.com/v3.8.0/omegajail-focal-distrib-x86_64.tar.xz"); do
       echo "downloading ${url}..."
-      curl --silent --location --url "${url}" | tar xJ -C /var/lib/omegajail/3.7.0 --strip-components=3
+      curl --silent --location --url "${url}" | tar xJ -C /var/lib/omegajail/3.8.0 --strip-components=3
     done
 
-    for url in $(echo "https://omegaup-omegajail.s3.amazonaws.com/v3.7.0/omegaup-runner.tar.xz"); do
+    for url in $(echo "https://omegaup-omegajail.s3.amazonaws.com/v3.8.0/omegaup-runner.tar.xz"); do
       echo "downloading ${url}..."
       curl --silent --location --url "${url}" | tar xJ -C /
     done

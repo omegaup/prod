@@ -248,6 +248,7 @@ func generateReport(db *gorm.DB, htmlTemplate *template.Template, params url.Val
 			{"py2", "Python 2.7"},
 			{"py3", "Python 3"},
 			{"rb", "Ruby"},
+			{"cs", "C#"},
 		},
 		Score:         scoreFilter,
 		Language:      languageFilter,

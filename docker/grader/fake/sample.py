@@ -26,7 +26,7 @@ def _main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('--database', default='submissions.db')
     parser.add_argument('--csv', default='submissions.raw.csv')
-    parser.add_argument('--sample-size', default=1000)
+    parser.add_argument('--sample-size', default=1000, type=int)
     args = parser.parse_args()
 
     if os.path.isfile(args.database):
@@ -59,7 +59,7 @@ def _main() -> None:
     df = pd.read_csv(args.csv, sep='\t')
 
     sampled = df.groupby(['language', 'verdict']).apply(
-        lambda x: x.sample(args.sample_size, replace=True)).drop_duplicates()
+        lambda x: x.sample(n=args.sample_size, replace=True)).drop_duplicates()
     with con:
         con.executemany(
             '''INSERT INTO Submissions VALUES (
