@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://omegaup.com/favicon.ico" />
+    <link rel="shortcut icon" href="https://omegaup.com/favicon.ico" />
+
+    <title>Grader</title>
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      window.addEventListener("DOMContentLoaded", (event) => {
+        const onDetailsClicked = async (ev) => {
+          const button = ev.target;
+          const guid = button.dataset.guid;
+          const submissionID = button.dataset.submissionId;
+          button.style.display = "none";
+          let parentTbody = button;
+          while (parentTbody.nodeName != "TBODY") {
+            parentTbody = parentTbody.parentElement;
+          }
+          const template = document
+            .querySelector("tbody[data-template] tr")
+            .cloneNode(true);
+          parentTbody.append(template);
+          const source = await (
+            await fetch(`/submission/${submissionID}/source/`)
+          ).text();
+          const logs = await (
+            await fetch(`/submission/${submissionID}/logs/`)
+          ).text();
+          const details = await (
+            await fetch(`/submission/${submissionID}/details/`)
+          ).text();
+          template.querySelector("td[data-source] pre").append(source);
+          template
+            .querySelector("td[data-details] pre[data-details]")
+            .append(details);
+          template
+            .querySelector("td[data-details] pre[data-logs]")
+            .append(logs);
+          template.querySelector(
+            "td[data-download] a"
+          ).href = `/submission/${submissionID}/download`;
+        };
+        document.querySelectorAll("button[data-details]").forEach((button) => {
+          button.addEventListener("click", onDetailsClicked);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header
+      class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow"
+    >
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"
+        >omegaUp Beta Grader</a
+      >
+    </header>
+    <div class="progress">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        style="width: {{ .Progress }}%;"
+        aria-valuenow="{{ .Progress }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        {{ printf "%.0f" .Progress }}%
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <main class="ms-sm-auto">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Dashboard</h1>
+            <form action="/" method="GET">
+              <div class="input-group">
+                <select name="score" class="form-select">
+                  <option value="" {{ if not .Score }} selected{{ end }}>
+                    Score
+                  </option>
+                  <option value="better" {{ if eq .Score "better" }} selected{{ end }}>
+                    Better
+                  </option>
+                  <option value="same" {{ if eq .Score "same" }} selected{{ end }}>
+                    Same
+                  </option>
+                  <option value="worse" {{ if eq .Score "worse" }} selected{{ end }}>
+                    Worse
+                  </option>
+                </select>
+                <select name="old_verdict" class="form-select">
+                  <option value="" {{ if not .OldVerdict }} selected{{ end }}>
+                    Old verdict
+                  </option>
+                  {{- range .Verdicts }}
+                  <option
+                    value="{{ . }}"
+                    {{
+                    if
+                    eq
+                    .
+                    $.OldVerdict
+                    }}
+                    selected{{
+                    end
+                    }}
+                  >
+                    {{ . }}
+                  </option>
+                  {{- end }}
+                </select>
+                <select name="new_verdict" class="form-select">
+                  <option value="" {{ if not .NewVerdict }} selected{{ end }}>
+                    New verdict
+                  </option>
+                  {{- range .Verdicts }}
+                  <option
+                    value="{{ . }}"
+                    {{
+                    if
+                    eq
+                    .
+                    $.NewVerdict
+                    }}
+                    selected{{
+                    end
+                    }}
+                  >
+                    {{ . }}
+                  </option>
+                  {{- end }}
+                </select>
+                <select id="language" name="language" class="form-select">
+                  {{- range .Languages }}
+                  <option
+                    value="{{ .Value }}"
+                    {{
+                    if
+                    eq
+                    .Value
+                    $.Language
+                    }}
+                    selected{{
+                    end
+                    }}
+                  >
+                    {{ .Name }}
+                  </option>
+                  {{- end -}}
+                </select>
+                <input class="btn btn-primary" type="submit" value="Submit" />
+              </div>
+            </form>
+          </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <h2>Scores</h2>
+                <div class="table-responsive w-100">
+                  <table class="table table-striped table-sm">
+                    <thead class="align-middle">
+                      <tr>
+                        <th scope="col">Score</th>
+                        <th scope="col" class="text-end">Count</th>
+                        <th scope="col" class="text-end">Percent</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Better</td>
+                        <td class="text-end">{{ .Better }}</td>
+                        <td class="text-end">
+                          {{ printf "%.2f" .BetterPercent }}%
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Same</td>
+                        <td class="text-end">{{ .Same }}</td>
+                        <td class="text-end">
+                          {{ printf "%.2f" .SamePercent }}%
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Worse</td>
+                        <td class="text-end">{{ .Worse }}</td>
+                        <td class="text-end">
+                          {{ printf "%.2f" .WorsePercent }}%
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td>TOTAL</td>
+                        <td class="text-end">{{ .TotalRuns }}</td>
+                        <td class="text-end">100.00%</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <h2>Confusion matrix</h2>
+                <div class="table-responsive w-100">
+                  <table class="table table-striped table-sm">
+                    <thead class="align-middle">
+                      <tr>
+                        <th scope="col"></th>
+                        {{- range .Verdicts }}
+                        <th scope="col" class="text-end">{{ . }}</th>
+                        {{- end }}
+                        <th scope="col" class="text-end">TOTAL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{- range $oldItem := .Verdicts }}
+                      <tr>
+                        <td class="text-end">{{ $oldItem }}</td>
+                        {{- range $newItem := $.Verdicts }}
+                        <td class="text-end">
+                          {{ if eq $newItem $oldItem }}<strong
+                            >{{ end }}{{ index $.Confusion $oldItem $newItem
+                            }}{{ if eq $oldItem $newItem }}</strong
+                          >{{ end }}
+                        </td>
+                        {{- end }}
+                        <td class="text-end">
+                          {{ index $.Confusion $oldItem "TOTAL" }}
+                        </td>
+                      </tr>
+                      {{- end }}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td class="text-end">TOTAL</td>
+                        {{- range $newItem := .Verdicts }}
+                        <td class="text-end">
+                          {{ index $.Confusion "TOTAL" $newItem }}
+                        </td>
+                        {{- end }}
+                        <td class="text-end">{{ .TotalRuns }}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h2>Submissions</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead class="align-middle">
+                <tr>
+                  <th scope="col" rowspan="2">ID</th>
+                  <th scope="col" rowspan="2">Language</th>
+                  <th scope="col" rowspan="2">Problem</th>
+                  <th scope="col" colspan="4" class="text-center">Old</th>
+                  <th scope="col" colspan="4" class="text-center">New</th>
+                  <th scope="col" rowspan="2" class="text-center">Syscalls</th>
+                  <th scope="col" rowspan="2">Details</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-center">Verdict</th>
+                  <th scope="col" class="text-end">Score</th>
+                  <th scope="col" class="text-end">Runtime</th>
+                  <th scope="col" class="text-end">Memory</th>
+                  <th scope="col" class="text-center">Verdict</th>
+                  <th scope="col" class="text-end">Score</th>
+                  <th scope="col" class="text-end">Runtime</th>
+                  <th scope="col" class="text-end">Memory</th>
+                </tr>
+              </thead>
+              {{- range .Submissions }}
+              <tbody>
+                <tr>
+                  <td>{{ .SubmissionID }}</td>
+                  <td>{{ .Language }}</td>
+                  <td>{{ .Problem }}</td>
+                  <td class="text-center">{{ .OldVerdict }}</td>
+                  <td class="text-end">{{ printf "%.0f" .OldScore }}</td>
+                  <td class="text-end">{{ printf "%.2f" .OldRuntime }} s</td>
+                  <td class="text-end">{{ printf "%.2f" .OldMemory }} MiB</td>
+                  <td class="text-center">{{ .NewVerdict }}</td>
+                  <td class="text-end">{{ printf "%.0f" .NewScore }}</td>
+                  <td class="text-end">{{ printf "%.2f" .NewRuntime }} s</td>
+                  <td class="text-end">{{ printf "%.2f" .NewMemory }} MiB</td>
+                  <td class="text-center align-middle font-monospace">
+                    {{ or .NewSyscalls "-" }}
+                  </td>
+                  <td class="text-center">
+                    <button
+                      data-details
+                      data-submission-id="{{ .SubmissionID }}"
+                      data-guid="{{ or .GUID }}"
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              {{- end }}
+              <tbody style="display: none" data-template>
+                <tr>
+                  <td data-source colspan="6">
+                    <pre></pre>
+                  </td>
+                  <td data-details colspan="5">
+                    <pre data-details></pre>
+                    <pre data-logs></pre>
+                  </td>
+                  <td data-download>
+                    <a
+                      href="#"
+                      class="btn btn-primary btn-lg active"
+                      role="button"
+                      aria-pressed="true"
+                      >Download</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
