@@ -46,6 +46,7 @@ runcmd:
             },
             "Runner": {
                     "Hostname": "${fqdn}",
+                    "CompileTimeLimit": "60s",
                     "RuntimePath": "/var/lib/omegaup/runner",
                     "GraderURL": "https://grader.omegaup.com:11302"
             },
