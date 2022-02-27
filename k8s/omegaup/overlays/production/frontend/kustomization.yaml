@@ -26,6 +26,7 @@ configMapGenerator:
   files:
   - nginx-config/broadcaster-upstream.conf
   - nginx-config/grader-upstream.conf
+  - nginx-config/realip.conf
   name: nginx-config
 
 patches:
