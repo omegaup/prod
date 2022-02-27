@@ -37,6 +37,7 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
+- nginx-echo-headers.yaml
 
 patches:
 - patch: |-
@@ -97,6 +98,13 @@ patches:
               backend:
                 service:
                   name: static-service
+                  port:
+                    number: 80
+            - path: /testtesttest/
+              pathType: Prefix
+              backend:
+                service:
+                  name: nginx-echo-headers-service
                   port:
                     number: 80
       tls:
