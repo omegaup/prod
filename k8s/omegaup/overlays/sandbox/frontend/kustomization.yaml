@@ -67,6 +67,8 @@ patches:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt
         nginx.org/hsts: true
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          set_real_ip_from  192.168.0.0/16;
     spec:
       rules:
         - host: sandbox.omegaup.com
