@@ -14,8 +14,7 @@ RUN mkdir -p \
       unzip -q -d /tmp/ /tmp/jdk.zip && \
       mv /tmp/docs/* /usr/share/nginx/html/docs/java/en/ && \
       rm -rf /tmp/jdk.zip /tmp/docs \ &&
-   curl https://lobishomen.files.wordpress.com/2011/01/libropre3.pdf --output libroluisvargas.pdf && \
-   mv ./libroluisvargas.pdf /usr/share/nginx/html/docs/assets \
+   curl -sL https://lobishomen.files.wordpress.com/2011/01/libropre3.pdf --output /usr/share/nginx/html/docs/assets/libroluisvargas.pdf
 
 FROM nginx:alpine
 COPY --from=build /usr/share/nginx/html /usr/share/nginx/html
