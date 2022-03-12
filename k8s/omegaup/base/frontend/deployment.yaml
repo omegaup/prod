@@ -245,3 +245,10 @@ spec:
             name: static-service
             port:
               number: 80
+      - path: /docs/assets/
+        pathType: Prefix
+        backend:
+          service:
+            name: static-service
+            port:
+              number: 80
