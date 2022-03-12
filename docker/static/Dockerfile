@@ -13,7 +13,7 @@ RUN mkdir -p \
    curl -sL https://download.oracle.com/otn_software/java/jdk/17.0.1+12/2a2082e5a09d4267845be086888add4f/jdk-17.0.1_doc-all.zip --output /tmp/jdk.zip && \
       unzip -q -d /tmp/ /tmp/jdk.zip && \
       mv /tmp/docs/* /usr/share/nginx/html/docs/java/en/ && \
-      rm -rf /tmp/jdk.zip /tmp/docs \ &&
+      rm -rf /tmp/jdk.zip /tmp/docs && \
    curl -sL https://lobishomen.files.wordpress.com/2011/01/libropre3.pdf --output /usr/share/nginx/html/docs/assets/libroluisvargas.pdf
 
 FROM nginx:alpine

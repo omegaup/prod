@@ -171,7 +171,7 @@ spec:
     spec:
       containers:
       - name: static
-        image: omegaup/static:20220104-2
+        image: omegaup/static:20220312
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
