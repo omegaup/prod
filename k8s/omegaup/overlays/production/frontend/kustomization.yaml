@@ -89,6 +89,13 @@ patches:
                   name: static-service
                   port:
                     number: 80
+            - path: /docs/assets/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
         - host: www.omegaup.com
           http:
             paths:
@@ -114,6 +121,13 @@ patches:
                   port:
                     number: 80
             - path: /docs/pas/
+              pathType: Prefix
+              backend:
+                service:
+                  name: static-service
+                  port:
+                    number: 80
+            - path: /docs/assets/
               pathType: Prefix
               backend:
                 service:
