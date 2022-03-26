@@ -29,6 +29,7 @@ spec:
           '--username=root',
           '--password=omegaup',
           '--hostname=mysql-service',
+          '--port=3306',
           'migrate',
           '--databases=omegaup',
         ]

@@ -77,6 +77,7 @@ patches:
               '--username=root',
               '--password=omegaup',
               '--hostname=mysql-service',
+              '--port=13306',
               'migrate',
               '--databases=omegaup',
               '--development-environment',
