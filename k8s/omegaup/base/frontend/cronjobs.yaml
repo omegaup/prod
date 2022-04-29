@@ -23,6 +23,7 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/aggregate_feedback.py
             - --log-json
+            - --port=3306
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
@@ -69,6 +70,7 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/update_ranks.py
             - --log-json
+            - --port=3306
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
@@ -115,6 +117,7 @@ spec:
             command:
             - /opt/omegaup/stuff/cron/assign_badges.py
             - --log-json
+            - --port=3306
             volumeMounts:
             - name: omegaup
               mountPath: /opt/omegaup
