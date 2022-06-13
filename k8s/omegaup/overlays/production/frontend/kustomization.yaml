@@ -151,14 +151,7 @@ patches:
           containers:
           - name: db-migrate
             command: [
-              '/opt/omegaup/stuff/db-migrate.py',
-              '--verbose',
-              '--log-json',
-              '--lower-timeout',
-              '--kill-blocking-connections',
-              '--aws',
-              'migrate',
-              '--databases=omegaup',
+              '/usr/bin/true',
             ]
             volumeMounts:
             - name: cronjobs-secret
