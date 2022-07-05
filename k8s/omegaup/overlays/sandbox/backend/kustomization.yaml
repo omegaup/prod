@@ -60,8 +60,8 @@ patches:
 
 images:
 - name: omegaup/backend
-  newTag: v1.9.28
+  newTag: v1.9.29
 - name: omegaup/gitserver
   newTag: v1.9.8
 - name: omegaup/runner
-  newTag: v1.9.28
+  newTag: v1.9.29
