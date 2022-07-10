@@ -69,6 +69,10 @@ types {
     application/xhtml+xml                            xhtml;
     application/xspf+xml                             xspf;
     application/zip                                  zip;
+    application/tar+bzip2                            tar.bz2;
+    application/tar+gzip                             tar.gz;
+    application/x-bzip2                              bz2;
+    application/x-gzip                               gz;
 
     application/octet-stream                         bin exe dll;
     application/octet-stream                         deb;
