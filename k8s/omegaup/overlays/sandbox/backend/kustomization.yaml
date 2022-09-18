@@ -62,6 +62,6 @@ images:
 - name: omegaup/backend
   newTag: v1.9.33
 - name: omegaup/gitserver
-  newTag: v1.9.10
+  newTag: v1.9.11
 - name: omegaup/runner
   newTag: v1.9.33
