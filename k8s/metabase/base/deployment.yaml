@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: metabase
-        image: metabase/metabase
+        image: metabase/metabase:v0.44.3
         imagePullPolicy: IfNotPresent
         env:
         - name: MB_DB_FILE
