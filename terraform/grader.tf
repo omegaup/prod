@@ -20,7 +20,7 @@ resource "kubernetes_persistent_volume" "omegaup_grader_pv" {
       csi {
         driver        = "ebs.csi.aws.com"
         fs_type       = "ext4"
-        volume_handle = "aws://${aws_ebs_volume.omegaup_grader.availability_zone}/${aws_ebs_volume.omegaup_grader.id}"
+        volume_handle = aws_ebs_volume.omegaup_grader.id
       }
     }
     capacity = {
