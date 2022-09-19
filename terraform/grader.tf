@@ -17,9 +17,10 @@ resource "kubernetes_persistent_volume" "omegaup_grader_pv" {
   spec {
     access_modes = ["ReadWriteOnce"]
     persistent_volume_source {
-      aws_elastic_block_store {
-        fs_type   = "ext4"
-        volume_id = "aws://${aws_ebs_volume.omegaup_grader.availability_zone}/${aws_ebs_volume.omegaup_grader.id}"
+      csi {
+        driver        = "ebs.csi.aws.com"
+        fs_type       = "ext4"
+        volume_handle = "aws://${aws_ebs_volume.omegaup_grader.availability_zone}/${aws_ebs_volume.omegaup_grader.id}"
       }
     }
     capacity = {
@@ -44,7 +45,6 @@ resource "kubernetes_persistent_volume" "omegaup_grader_pv" {
       }
     }
     persistent_volume_reclaim_policy = "Retain"
-    storage_class_name               = "gp2-retain"
     volume_mode                      = "Filesystem"
   }
 }

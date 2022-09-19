@@ -34,7 +34,6 @@ patches:
           storage: 50Gi
       accessModes:
       - ReadWriteOnce
-      storageClassName: gp2-retain
       volumeMode: Filesystem
       volumeName: omegaup-grader-pv
 - patch: |
