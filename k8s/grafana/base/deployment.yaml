@@ -111,11 +111,16 @@ spec:
     spec:
       containers:
       - name: prometheus
-        image: prom/prometheus:v2.30.3
-        args:
-        - "--storage.tsdb.retention.time=12h"
-        - "--config.file=/etc/prometheus/prometheus.yml"
-        - "--storage.tsdb.path=/prometheus/"
+        image: prom/prometheus:v2.38.3
+        command:
+        - /bin/sh
+        args: >-
+          echo 'scrape_configs:' > /tmp/prometheus.yml &&
+          sed -se 's/^/    /; 1 s/^    /  - /' /etc/prometheus.tmpl/*.yml >> /tmp/prometheus.yml &&
+          exec /bin/prometheus
+            --storage.tsdb.retention.time=12h
+            --config.file=/tmp/prometheus.yml
+            --storage.tsdb.path=/prometheus/
         ports:
         - name: http-prometheus
           protocol: TCP

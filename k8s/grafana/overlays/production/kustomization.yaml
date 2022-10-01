@@ -14,7 +14,11 @@ configMapGenerator:
   - grafana-config/grafana.ini
 - name: prometheus-config
   files:
-  - prometheus-config/prometheus.yml
+  - prometheus-config/kubernetes-apiservers.yml
+  - prometheus-config/kubernetes-endpoints.yml
+  - prometheus-config/kubernetes-nodes.yml
+  - prometheus-config/kubernetes-pods.yml
+  - prometheus-config/kubernetes-services.yml
 generators:
 - grafana-secret-generator.yaml
 patches:
@@ -80,8 +84,20 @@ patches:
             - name: prometheus
               volumeMounts:
               - name: prometheus-config
-                mountPath: /etc/prometheus/prometheus.yml
-                subPath: prometheus.yml
+                mountPath: /etc/prometheus.tmpl/kubernetes-apiservers.yml
+                subPath: kubernetes-apiservers.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/kubernetes-endpoints.yml
+                subPath: kubernetes-endpoints.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/kubernetes-nodes.yml
+                subPath: kubernetes-nodes.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/kubernetes-pods.yml
+                subPath: kubernetes-pods.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/kubernetes-services.yml
+                subPath: kubernetes-services.yml
           volumes:
           - name: prometheus-config
             configMap:
