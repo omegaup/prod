@@ -25,12 +25,12 @@ resource "azurerm_shared_image" "runner" {
 }
 
 data "azurerm_image" "runner" {
-  name                = "omegaup-runner-image-20220312"
+  name                = "omegaup-runner-image-20221002"
   resource_group_name = azurerm_resource_group.runner_image_builder.name
 }
 
 resource "azurerm_shared_image_version" "runner" {
-  name                = "1.0.6"
+  name                = "1.0.7"
   gallery_name        = azurerm_shared_image_gallery.runner.name
   image_name          = azurerm_shared_image.runner.name
   resource_group_name = azurerm_resource_group.runner_image_builder.name

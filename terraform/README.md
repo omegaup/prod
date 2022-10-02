@@ -8,7 +8,7 @@ while true; do
     --resource-group omegaup-runner-image-builder \
     --name omegaup-runner-image-builder \
     --show-details | jq -r '.powerState')"
-  if [[ "${vm_state}" != "VM running" ]]; then
+  if [[ "${vm_state}" == "VM stopped" ]]; then
     break
   fi
   echo "${vm_state}"

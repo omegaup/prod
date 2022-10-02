@@ -96,6 +96,6 @@ resource "aws_db_instance" "omegaup_readonly" {
   replicate_source_db = aws_db_instance.omegaup.id
   availability_zone   = "us-east-1a"
   engine              = "mysql"
-  engine_version      = "8.0.23"
+  engine_version      = "8.0.28"
   skip_final_snapshot = true
 }
