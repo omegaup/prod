@@ -20,6 +20,7 @@ configMapGenerator:
   - prometheus-config/scrape-configs/kubernetes-nodes.yml
   - prometheus-config/scrape-configs/kubernetes-pods.yml
   - prometheus-config/scrape-configs/kubernetes-services.yml
+  - prometheus-config/scrape-configs/runners.yml
 generators:
 - grafana-secret-generator.yaml
 patches:
@@ -102,6 +103,9 @@ patches:
               - name: prometheus-config
                 mountPath: /etc/prometheus.tmpl/scrape-configs/kubernetes-services.yml
                 subPath: kubernetes-services.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/scrape-configs/runners.yml
+                subPath: runners.yml
           volumes:
           - name: prometheus-config
             configMap:

@@ -1,0 +1,4 @@
+job_name: runners
+metrics_path: /metrics
+http_sd_configs:
+  - url: http://grader-service.omegaup.svc.cluster.local:6060/metrics/runners
