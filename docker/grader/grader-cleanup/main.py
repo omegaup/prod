@@ -28,7 +28,7 @@ def _walk(
                 path = os.path.join(dirname, name)
                 stat = os.stat(path)
                 age_in_days = int(now - stat.st_ctime) // 3600 // 24
-                if age_in_days > min_age_days:
+                if age_in_days >= min_age_days:
                     yield (path, stat.st_ctime)
             # Prevent recursion.
             dirs.clear()
@@ -37,24 +37,32 @@ def _walk(
 def _main() -> None:
     logging.basicConfig(level=logging.INFO)
 
+    logging.info('starting...')
     for path, ctime in itertools.chain(
-            _walk('/var/lib/omegaup/ephemeral',
-                  depth=1,
-                  file=False,
-                  min_age_days=1),
-            _walk('/var/lib/omegaup/grade',
-                  depth=3,
-                  file=False,
-                  min_age_days=128),
-            _walk('/var/lib/omegaup/submissions',
-                  depth=1,
-                  file=True,
-                  min_age_days=128),
+            _walk(
+                '/var/lib/omegaup/ephemeral',
+                depth=1,
+                file=False,
+                min_age_days=1,
+            ),
+            _walk(
+                '/var/lib/omegaup/grade',
+                depth=3,
+                file=False,
+                min_age_days=128,
+            ),
+            _walk(
+                '/var/lib/omegaup/submissions',
+                depth=1,
+                file=True,
+                min_age_days=128,
+            ),
     ):
         logging.info(
             '%s %s', path,
             datetime.datetime.utcfromtimestamp(ctime).strftime(
                 '%Y-%m-%dT%H:%M:%SZ'))
+    logging.info('done')
 
 
 if __name__ == '__main__':
