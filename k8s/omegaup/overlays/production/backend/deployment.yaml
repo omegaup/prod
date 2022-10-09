@@ -63,3 +63,50 @@ spec:
           claimName: omegaup-backend-pvc
       securityContext:
         fsGroup: 1000
+---
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: grader-cleanup
+  labels:
+    app.kubernetes.io/name: grader-cleanup
+    app.kubernetes.io/part-of: backend-cronjobs
+    app.kubernetes.io/component: grader
+spec:
+  schedule: @daily
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: grader-cleanup
+            app.kubernetes.io/part-of: backend-cronjobs
+            app.kubernetes.io/component: grader
+        spec:
+          restartPolicy: Never
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 50
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                      - grader
+                  topologyKey: "kubernetes.io/hostname"
+          serviceAccountName: grader-cleanup
+          containers:
+          - name: grader-cleanup
+            image: omegaup/grader-cleanup:20221009
+            volumeMounts:
+            - name: omegaup-backend
+              mountPath: /var/lib/omegaup
+          volumes:
+          - name: omegaup-backend
+            persistentVolumeClaim:
+              claimName: omegaup-backend-pvc
+          securityContext:
+            fsGroup: 1000
