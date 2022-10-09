@@ -74,7 +74,7 @@ metadata:
     app.kubernetes.io/part-of: backend-cronjobs
     app.kubernetes.io/component: grader
 spec:
-  schedule: @daily
+  schedule: "@daily"
   jobTemplate:
     spec:
       template:
@@ -97,7 +97,7 @@ spec:
                       values:
                       - grader
                   topologyKey: "kubernetes.io/hostname"
-          serviceAccountName: grader-cleanup
+          serviceAccountName: grader
           containers:
           - name: grader-cleanup
             image: omegaup/grader-cleanup:20221009
