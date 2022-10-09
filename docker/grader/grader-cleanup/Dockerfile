@@ -1,3 +1,5 @@
-FROM alpine:3.16.2
-COPY start.sh /usr/bin/
-CMD ["/usr/bin/start.sh"]
+FROM python:3.10-alpine
+
+COPY main.py .
+
+CMD ["python", "./main.py"]
