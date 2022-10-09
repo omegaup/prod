@@ -17,54 +17,6 @@ spec:
     targetPort: 11302
 ---
 apiVersion: batch/v1
-kind: Job
-
-metadata:
-  name: grader-backup
-  labels:
-    app.kubernetes.io/name: grader-backup
-    app.kubernetes.io/part-of: backend-cronjobs
-    app.kubernetes.io/component: grader
-spec:
-  backoffLimit: 4
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: grader-backup
-        app.kubernetes.io/part-of: backend-cronjobs
-        app.kubernetes.io/component: grader
-    spec:
-      restartPolicy: Never
-      affinity:
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 50
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - grader
-              topologyKey: "kubernetes.io/hostname"
-      serviceAccountName: grader-backup
-      containers:
-      - name: grader-backup
-        image: omegaup/grader-backup:20211219.2
-        command:
-        - "/usr/bin/grader-backup"
-        - "-workers=32"
-        volumeMounts:
-        - name: omegaup-backend
-          mountPath: /var/lib/omegaup
-      volumes:
-      - name: omegaup-backend
-        persistentVolumeClaim:
-          claimName: omegaup-backend-pvc
-      securityContext:
-        fsGroup: 1000
----
-apiVersion: batch/v1
 kind: CronJob
 
 metadata:
