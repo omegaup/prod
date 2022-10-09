@@ -52,7 +52,7 @@ spec:
           serviceAccountName: grader
           containers:
           - name: grader-cleanup
-            image: omegaup/grader-cleanup:20221009.3
+            image: omegaup/grader-cleanup:20221009.4
             volumeMounts:
             - name: omegaup-backend
               mountPath: /var/lib/omegaup

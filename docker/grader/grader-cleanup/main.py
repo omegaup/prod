@@ -63,6 +63,7 @@ def _main() -> None:
             datetime.datetime.utcfromtimestamp(ctime).strftime(
                 '%Y-%m-%dT%H:%M:%SZ'))
     logging.info('done')
+    time.sleep(999999)
 
 
 if __name__ == '__main__':
