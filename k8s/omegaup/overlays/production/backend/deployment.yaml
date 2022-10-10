@@ -59,6 +59,6 @@ spec:
           volumes:
           - name: omegaup-backend
             persistentVolumeClaim:
-              claimName: omegaup-backend-pvc
+              claimName: omegaup-grader-pvc
           securityContext:
             fsGroup: 1000
