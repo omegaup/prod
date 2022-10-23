@@ -36,8 +36,12 @@ spec:
         - name: omegaup-secret
           mountPath: /opt/omegaup/frontend/server/config.php
           subPath: config.php
+        # TODO: Remove once we migrate to jammy.
         - name: php-config
           mountPath: /etc/php/8.0/fpm/php-fpm.conf
+          subPath: php-fpm.conf
+        - name: php-config
+          mountPath: /etc/php/8.1/fpm/php-fpm.conf
           subPath: php-fpm.conf
         - name: omegaup
           mountPath: /opt/omegaup

@@ -41,8 +41,12 @@ patches:
           containers:
           - name: php
             volumeMounts:
+            # TODO: Remove once we migrate to jammy.
             - name: newrelic-secret
               mountPath: /etc/php/8.0/mods-available/newrelic.ini
+              subPath: newrelic.ini
+            - name: newrelic-secret
+              mountPath: /etc/php/8.1/mods-available/newrelic.ini
               subPath: newrelic.ini
           volumes:
           - name: newrelic-secret
