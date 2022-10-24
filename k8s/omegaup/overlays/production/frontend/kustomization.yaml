@@ -29,6 +29,7 @@ configMapGenerator:
   - nginx-config/realip.conf
   name: nginx-config
 
+            # TODO: Remove once we migrate to jammy.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -181,10 +182,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: d2e82bab73cf8519062bc295429219942521110e
+  newTag: 781c43506d6a3eab976c0ff904fdcc59f644eed3
 - name: omegaup/frontend-sidecar
-  newTag: d2e82bab73cf8519062bc295429219942521110e
+  newTag: 781c43506d6a3eab976c0ff904fdcc59f644eed3
 - name: omegaup/nginx
-  newTag: d2e82bab73cf8519062bc295429219942521110e
+  newTag: 781c43506d6a3eab976c0ff904fdcc59f644eed3
 - name: omegaup/php
-  newTag: d2e82bab73cf8519062bc295429219942521110e
+  newTag: 781c43506d6a3eab976c0ff904fdcc59f644eed3
