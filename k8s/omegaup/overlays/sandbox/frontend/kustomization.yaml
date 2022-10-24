@@ -39,6 +39,7 @@ resources:
 - ../../../base/frontend
 - database.yaml
 
+            # TODO: Remove once we migrate to jammy.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -124,10 +125,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: 5323065d644e814bf87ee38512a408da4a3e638c
+  newTag: 8a8383f75c9dac3c2c5fe069acc3501e6b501df8
 - name: omegaup/frontend-sidecar
-  newTag: 5323065d644e814bf87ee38512a408da4a3e638c
+  newTag: 8a8383f75c9dac3c2c5fe069acc3501e6b501df8
 - name: omegaup/nginx
-  newTag: 5323065d644e814bf87ee38512a408da4a3e638c
+  newTag: 8a8383f75c9dac3c2c5fe069acc3501e6b501df8
 - name: omegaup/php
-  newTag: 5323065d644e814bf87ee38512a408da4a3e638c
+  newTag: 8a8383f75c9dac3c2c5fe069acc3501e6b501df8
