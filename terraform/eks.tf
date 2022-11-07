@@ -59,7 +59,8 @@ resource "aws_iam_role" "omegaup_eks_cluster" {
 }
 
 resource "aws_vpc" "omegaup_eks_cluster_vpc" {
-  cidr_block = "192.168.0.0/16"
+  cidr_block                       = "192.168.0.0/16"
+  assign_generated_ipv6_cidr_block = true
 
   tags = {
     Name = "omegaup-eks-cluster-vpc"

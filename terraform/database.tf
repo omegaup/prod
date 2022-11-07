@@ -1,5 +1,6 @@
 resource "aws_vpc" "omegaup" {
-  cidr_block = "172.31.0.0/16"
+  cidr_block                       = "172.31.0.0/16"
+  assign_generated_ipv6_cidr_block = true
 
   tags = {
     Name                                        = "omegaup-vpc"
@@ -34,7 +35,7 @@ resource "aws_security_group" "default" {
 
 resource "aws_db_instance" "omegaup" {
   identifier          = "omegaup-db"
-  name                = "omegaup"
+  db_name             = "omegaup"
   availability_zone   = "us-east-1e"
   instance_class      = "db.t2.large"
   allocated_storage   = 10
@@ -91,11 +92,8 @@ resource "aws_db_parameter_group" "omegaup_frontend" {
 
 resource "aws_db_instance" "omegaup_readonly" {
   identifier          = "omegaup-db-readonly"
-  name                = "omegaup"
   instance_class      = "db.t3.small"
   replicate_source_db = aws_db_instance.omegaup.id
   availability_zone   = "us-east-1a"
-  engine              = "mysql"
-  engine_version      = "8.0.28"
   skip_final_snapshot = true
 }

@@ -90,7 +90,8 @@ resource "azurerm_key_vault" "runner" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
+    // object_id = data.azurerm_client_config.current.object_id
+    object_id = "f95f638f-ccc4-4603-8d26-ca0aa429e7c1"
 
     certificate_permissions = [
       "Get",
