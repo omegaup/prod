@@ -65,6 +65,15 @@ resource "aws_s3_bucket_acl" "omegaup_problems" {
   acl    = "private"
 }
 
+resource "aws_s3_bucket_public_access_block" "omegaup_problems" {
+  bucket = aws_s3_bucket.omegaup_problems.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_iam_policy" "gitserver" {
   name = "gitserver"
 
