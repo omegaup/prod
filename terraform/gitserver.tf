@@ -52,3 +52,82 @@ resource "kubernetes_persistent_volume" "omegaup_backend_pv" {
     volume_mode                      = "Filesystem"
   }
 }
+
+resource "aws_s3_bucket" "omegaup_problems" {
+  bucket = "omegaup-problems"
+
+  tags = {
+  }
+}
+
+resource "aws_s3_bucket_acl" "omegaup_problems" {
+  bucket = aws_s3_bucket.omegaup_problems.id
+  acl    = "private"
+}
+
+resource "aws_iam_policy" "gitserver" {
+  name = "gitserver"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:s3:::omegaup-problems/*",
+        ]
+      },
+    ]
+  })
+
+  tags = {
+  }
+}
+
+data "aws_iam_policy_document" "gitserver_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.omegaup_eks_cluster.url, "https://", "")}:sub"
+      values = [
+        // This should match kubernetes_service_account.gitserver.metadata[0].name
+        "system:serviceaccount:${kubernetes_namespace.omegaup.metadata[0].name}:gitserver",
+      ]
+    }
+
+    principals {
+      identifiers = [aws_iam_openid_connect_provider.omegaup_eks_cluster.arn]
+      type        = "Federated"
+    }
+  }
+}
+
+resource "aws_iam_role" "gitserver" {
+  name        = "gitserver"
+  description = "The role for the gitserver service."
+
+  assume_role_policy = data.aws_iam_policy_document.gitserver_assume_role_policy.json
+  managed_policy_arns = [
+    aws_iam_policy.gitserver.arn,
+  ]
+
+  tags = {
+  }
+}
+
+resource "kubernetes_service_account" "gitserver" {
+  metadata {
+    name      = "gitserver"
+    namespace = kubernetes_namespace.omegaup.metadata[0].name
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.gitserver.arn
+    }
+  }
+}

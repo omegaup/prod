@@ -46,6 +46,15 @@ patches:
       template:
         spec:
           serviceAccountName: grader
+- patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: gitserver-deployment
+    spec:
+      template:
+        spec:
+          serviceAccountName: gitserver
 - path: gitserver-deployment.yaml
   target:
     group: apps
