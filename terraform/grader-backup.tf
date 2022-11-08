@@ -6,12 +6,11 @@ resource "aws_iam_policy" "grader_backup" {
     Statement = [
       {
         Action = [
-          "s3:PutObject",
+          "s3:ListBucket",
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::omegaup-backup/omegaup/submissions/*",
-          "arn:aws:s3:::omegaup-runs/*",
+          "arn:aws:s3:::${aws_s3_bucket.omegaup_backup.bucket}",
         ]
       },
       {
@@ -20,8 +19,16 @@ resource "aws_iam_policy" "grader_backup" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::omegaup-backup/omegaup/submissions/bucket-metadata.json",
-          "arn:aws:s3:::omegaup-runs/bucket-metadata.json",
+          "arn:aws:s3:::${aws_s3_bucket.omegaup_backup.bucket}/*",
+        ]
+      },
+      {
+        Action = [
+          "s3:PutObject",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:s3:::${aws_s3_bucket.omegaup_submissions.bucket}/*",
         ]
       },
     ]
