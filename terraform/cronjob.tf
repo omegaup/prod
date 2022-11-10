@@ -10,7 +10,7 @@ resource "aws_iam_policy" "plagiarism_detector_cronjob" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::omegaup-backup/omegaup/submissions/*",
+          "arn:aws:s3:::${aws_s3_bucket.omegaup_submissions.bucket}/*",
         ]
       },
     ]

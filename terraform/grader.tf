@@ -125,7 +125,6 @@ resource "aws_iam_policy" "grader" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.omegaup_backup.bucket}/omegaup/submissions/*",
           "arn:aws:s3:::${aws_s3_bucket.omegaup_runs.bucket}/*",
           "arn:aws:s3:::${aws_s3_bucket.omegaup_submissions.bucket}/*",
         ]
