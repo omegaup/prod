@@ -198,7 +198,7 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana:8.2.2
+        image: grafana/grafana:8.5.22
         ports:
         - name: http-grafana
           protocol: TCP
