@@ -40,7 +40,7 @@ resource "aws_db_instance" "omegaup" {
   instance_class      = "db.t2.large"
   allocated_storage   = 10
   engine              = "mysql"
-  engine_version      = "8.0.23"
+  engine_version      = "8.0.28"
   deletion_protection = true
   enabled_cloudwatch_logs_exports = [
     "slowquery",
