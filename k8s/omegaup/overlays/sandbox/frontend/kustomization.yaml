@@ -133,6 +133,7 @@ resources:
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
+            # TODO: Remove once we migrate to jammy.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -218,10 +219,10 @@ patches:
 
 images:
 - name: omegaup/frontend
-  newTag: 9f59995bde0113164616dc4c5ccc2ed599e7e3f1
+  newTag: 53c4d18f9ca8adb978d3ab89cc16b8917c2cb3af
 - name: omegaup/frontend-sidecar
-  newTag: 9f59995bde0113164616dc4c5ccc2ed599e7e3f1
+  newTag: 53c4d18f9ca8adb978d3ab89cc16b8917c2cb3af
 - name: omegaup/nginx
-  newTag: 9f59995bde0113164616dc4c5ccc2ed599e7e3f1
+  newTag: 53c4d18f9ca8adb978d3ab89cc16b8917c2cb3af
 - name: omegaup/php
-  newTag: 9f59995bde0113164616dc4c5ccc2ed599e7e3f1
+  newTag: 53c4d18f9ca8adb978d3ab89cc16b8917c2cb3af
