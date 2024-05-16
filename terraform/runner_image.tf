@@ -11,7 +11,7 @@ resource "azurerm_shared_image_gallery" "runner" {
 }
 
 resource "azurerm_shared_image" "runner" {
-  name                = "omegaup-runner-image-20230401"
+  name                = "omegaup-runner-image-20221002"
   gallery_name        = azurerm_shared_image_gallery.runner.name
   resource_group_name = azurerm_resource_group.runner_image_builder.name
   location            = azurerm_resource_group.runner_image_builder.location
@@ -20,17 +20,17 @@ resource "azurerm_shared_image" "runner" {
   identifier {
     publisher = "omegaUp"
     offer     = "runner"
-    sku       = "20230401"
+    sku       = "20221002"
   }
 }
 
 data "azurerm_image" "runner" {
-  name                = "omegaup-runner-image-20230401"
+  name                = "omegaup-runner-image-20221002"
   resource_group_name = azurerm_resource_group.runner_image_builder.name
 }
 
 resource "azurerm_shared_image_version" "runner" {
-  name                = "1.0.8"
+  name                = "1.0.7"
   gallery_name        = azurerm_shared_image_gallery.runner.name
   image_name          = azurerm_shared_image.runner.name
   resource_group_name = azurerm_resource_group.runner_image_builder.name
