@@ -1,7 +1,8 @@
 locals {
-  locations = [
+  locations = toset([
     "westus2",
-  ]
+    "westus3",
+  ])
 }
 
 resource "azurerm_resource_group" "runner" {
@@ -16,36 +17,36 @@ resource "azurerm_user_assigned_identity" "runner" {
 }
 
 resource "azurerm_resource_group" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name     = "omegaup-runner-${local.locations[count.index]}"
-  location = local.locations[count.index]
+  name     = "omegaup-runner-${each.key}"
+  location = each.key
 }
 
 resource "azurerm_virtual_network" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name                = "omegaup-runner-${local.locations[count.index]}-vnet"
-  resource_group_name = azurerm_resource_group.runner_vmss[count.index].name
-  location            = azurerm_resource_group.runner_vmss[count.index].location
+  name                = "omegaup-runner-${each.key}-vnet"
+  resource_group_name = azurerm_resource_group.runner_vmss[each.key].name
+  location            = azurerm_resource_group.runner_vmss[each.key].location
   address_space       = ["172.16.0.0/16"]
 }
 
 resource "azurerm_subnet" "runner_vmss_default" {
-  count = length(local.locations)
+  for_each = local.locations
 
   name                 = "default"
-  resource_group_name  = azurerm_resource_group.runner_vmss[count.index].name
-  virtual_network_name = azurerm_virtual_network.runner_vmss[count.index].name
+  resource_group_name  = azurerm_resource_group.runner_vmss[each.key].name
+  virtual_network_name = azurerm_virtual_network.runner_vmss[each.key].name
   address_prefixes     = ["172.16.0.0/16"]
 }
 
 resource "azurerm_network_security_group" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name                = "omegaup-runner-${local.locations[count.index]}-nsg"
-  resource_group_name = azurerm_resource_group.runner_vmss[count.index].name
-  location            = azurerm_resource_group.runner_vmss[count.index].location
+  name                = "omegaup-runner-${each.key}-nsg"
+  resource_group_name = azurerm_resource_group.runner_vmss[each.key].name
+  location            = azurerm_resource_group.runner_vmss[each.key].location
 
   security_rule {
     name                       = "SSH"
@@ -72,9 +73,9 @@ resource "azurerm_network_security_group" "runner_vmss" {
 }
 
 resource "azurerm_user_assigned_identity" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name                = "omegaup-runner-${local.locations[count.index]}"
+  name                = "omegaup-runner-${each.key}"
   resource_group_name = azurerm_resource_group.runner.name
   location            = azurerm_resource_group.runner.location
 }
@@ -143,7 +144,7 @@ resource "azurerm_key_vault" "runner" {
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_user_assigned_identity.runner_vmss[0].principal_id
+    object_id = azurerm_user_assigned_identity.runner_vmss["westus2"].principal_id
 
     certificate_permissions = [
       "Get",
@@ -182,11 +183,11 @@ resource "azurerm_key_vault" "runner" {
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name                        = "omegaup-runner-${local.locations[count.index]}-vmss"
-  resource_group_name         = azurerm_resource_group.runner_vmss[count.index].name
-  location                    = azurerm_resource_group.runner_vmss[count.index].location
+  name                        = "omegaup-runner-${each.key}-vmss"
+  resource_group_name         = azurerm_resource_group.runner_vmss[each.key].name
+  location                    = azurerm_resource_group.runner_vmss[each.key].location
   sku                         = "Standard_A1_v2"
   priority                    = "Spot"
   scale_in_policy             = "OldestVM"
@@ -261,17 +262,17 @@ resource "azurerm_linux_virtual_machine_scale_set" "runner_vmss" {
 
   network_interface {
     dns_servers               = []
-    name                      = "omegaup-runner-${local.locations[count.index]}-nic"
+    name                      = "omegaup-runner-${each.key}-nic"
     primary                   = true
-    network_security_group_id = azurerm_network_security_group.runner_vmss[0].id
+    network_security_group_id = azurerm_network_security_group.runner_vmss[each.key].id
 
     ip_configuration {
-      name      = "omegaup-runner-${local.locations[count.index]}-ipconfig"
+      name      = "omegaup-runner-${each.key}-ipconfig"
       primary   = true
-      subnet_id = azurerm_subnet.runner_vmss_default[count.index].id
+      subnet_id = azurerm_subnet.runner_vmss_default[each.key].id
 
       public_ip_address {
-        name                    = "omegaup-runner-${local.locations[count.index]}-ipconfig-public"
+        name                    = "omegaup-runner-${each.key}-ipconfig-public"
         domain_name_label       = "omegaup-runner"
         idle_timeout_in_minutes = 30
       }
@@ -314,12 +315,12 @@ resource "azurerm_application_insights" "grader" {
 }
 
 resource "azurerm_monitor_autoscale_setting" "runner_vmss" {
-  count = length(local.locations)
+  for_each = local.locations
 
-  name                = "omegaup-runner-${local.locations[count.index]}-autoscale"
-  resource_group_name = azurerm_resource_group.runner_vmss[count.index].name
-  location            = azurerm_resource_group.runner_vmss[count.index].location
-  target_resource_id  = azurerm_linux_virtual_machine_scale_set.runner_vmss[count.index].id
+  name                = "omegaup-runner-${each.key}-autoscale"
+  resource_group_name = azurerm_resource_group.runner_vmss[each.key].name
+  location            = azurerm_resource_group.runner_vmss[each.key].location
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.runner_vmss[each.key].id
 
   profile {
     name = "Default"

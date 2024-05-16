@@ -37,10 +37,13 @@ resource "azurerm_shared_image_version" "runner" {
   location            = azurerm_resource_group.runner_image_builder.location
   managed_image_id    = data.azurerm_image.runner.id
 
-  target_region {
-    name                   = azurerm_shared_image.runner.location
-    regional_replica_count = 1
-    storage_account_type   = "Standard_ZRS"
+  dynamic "target_region" {
+    for_each = local.locations
+    content {
+      name                   = target_region.key
+      regional_replica_count = 1
+      storage_account_type   = "Standard_ZRS"
+    }
   }
 }
 

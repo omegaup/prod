@@ -13,36 +13,36 @@ resource "azurerm_user_assigned_identity" "runner_beta" {
 }
 
 resource "azurerm_resource_group" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name     = "omegaup-runner-beta-${local.locations[count.index]}"
-  location = local.locations[count.index]
+  name     = "omegaup-runner-beta-${each.key}"
+  location = each.key
 }
 
 resource "azurerm_virtual_network" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name                = "omegaup-runner-beta-${local.locations[count.index]}-vnet"
-  resource_group_name = azurerm_resource_group.runner_beta_vmss[count.index].name
-  location            = azurerm_resource_group.runner_beta_vmss[count.index].location
+  name                = "omegaup-runner-beta-${each.key}-vnet"
+  resource_group_name = azurerm_resource_group.runner_beta_vmss[each.key].name
+  location            = azurerm_resource_group.runner_beta_vmss[each.key].location
   address_space       = ["172.16.0.0/16"]
 }
 
 resource "azurerm_subnet" "runner_beta_vmss_default" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
   name                 = "default"
-  resource_group_name  = azurerm_resource_group.runner_beta_vmss[count.index].name
-  virtual_network_name = azurerm_virtual_network.runner_beta_vmss[count.index].name
+  resource_group_name  = azurerm_resource_group.runner_beta_vmss[each.key].name
+  virtual_network_name = azurerm_virtual_network.runner_beta_vmss[each.key].name
   address_prefixes     = ["172.16.0.0/16"]
 }
 
 resource "azurerm_network_security_group" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name                = "omegaup-runner-beta-${local.locations[count.index]}-nsg"
-  resource_group_name = azurerm_resource_group.runner_beta_vmss[count.index].name
-  location            = azurerm_resource_group.runner_beta_vmss[count.index].location
+  name                = "omegaup-runner-beta-${each.key}-nsg"
+  resource_group_name = azurerm_resource_group.runner_beta_vmss[each.key].name
+  location            = azurerm_resource_group.runner_beta_vmss[each.key].location
 
   security_rule {
     name                       = "SSH"
@@ -69,19 +69,19 @@ resource "azurerm_network_security_group" "runner_beta_vmss" {
 }
 
 resource "azurerm_user_assigned_identity" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name                = "omegaup-runner-beta-${local.locations[count.index]}"
-  resource_group_name = azurerm_resource_group.runner_beta[count.index].name
-  location            = azurerm_resource_group.runner_beta[count.index].location
+  name                = "omegaup-runner-beta-${each.key}"
+  resource_group_name = azurerm_resource_group.runner_beta[each.key].name
+  location            = azurerm_resource_group.runner_beta[each.key].location
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name                        = "omegaup-runner-beta-${local.locations[count.index]}-vmss"
-  resource_group_name         = azurerm_resource_group.runner_beta_vmss[count.index].name
-  location                    = azurerm_resource_group.runner_beta_vmss[count.index].location
+  name                        = "omegaup-runner-beta-${each.key}-vmss"
+  resource_group_name         = azurerm_resource_group.runner_beta_vmss[each.key].name
+  location                    = azurerm_resource_group.runner_beta_vmss[each.key].location
   sku                         = "Standard_A1_v2"
   priority                    = "Spot"
   scale_in_policy             = "OldestVM"
@@ -127,24 +127,24 @@ resource "azurerm_linux_virtual_machine_scale_set" "runner_beta_vmss" {
 
   identity {
     identity_ids = [
-      azurerm_user_assigned_identity.runner_beta[count.index].id,
+      azurerm_user_assigned_identity.runner_beta[each.key].id,
     ]
     type = "UserAssigned"
   }
 
   network_interface {
     dns_servers               = []
-    name                      = "omegaup-runner-beta-${local.locations[count.index]}-nic"
+    name                      = "omegaup-runner-beta-${each.key}-nic"
     primary                   = true
     network_security_group_id = azurerm_network_security_group.runner_beta_vmss[0].id
 
     ip_configuration {
-      name      = "omegaup-runner-beta-${local.locations[count.index]}-ipconfig"
+      name      = "omegaup-runner-beta-${each.key}-ipconfig"
       primary   = true
-      subnet_id = azurerm_subnet.runner_beta_vmss_default[count.index].id
+      subnet_id = azurerm_subnet.runner_beta_vmss_default[each.key].id
 
       public_ip_address {
-        name                    = "omegaup-runner-beta-${local.locations[count.index]}-ipconfig-public"
+        name                    = "omegaup-runner-beta-${each.key}-ipconfig-public"
         domain_name_label       = "omegaup-runner-beta"
         idle_timeout_in_minutes = 30
       }
@@ -178,12 +178,12 @@ resource "azurerm_linux_virtual_machine_scale_set" "runner_beta_vmss" {
   }
 }
 resource "azurerm_monitor_autoscale_setting" "runner_beta_vmss" {
-  count = var.runner_beta ? length(local.locations) : 0
+  for_each = var.runner_beta ? local.locations : toset([])
 
-  name                = "omegaup-runner-beta-${local.locations[count.index]}-autoscale"
-  resource_group_name = azurerm_resource_group.runner_beta_vmss[count.index].name
-  location            = azurerm_resource_group.runner_beta_vmss[count.index].location
-  target_resource_id  = azurerm_linux_virtual_machine_scale_set.runner_beta_vmss[count.index].id
+  name                = "omegaup-runner-beta-${each.key}-autoscale"
+  resource_group_name = azurerm_resource_group.runner_beta_vmss[each.key].name
+  location            = azurerm_resource_group.runner_beta_vmss[each.key].location
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.runner_beta_vmss[each.key].id
 
   profile {
     name = "Default"
