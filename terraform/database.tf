@@ -36,11 +36,11 @@ resource "aws_security_group" "default" {
 resource "aws_db_instance" "omegaup" {
   identifier          = "omegaup-db"
   db_name             = "omegaup"
-  availability_zone   = "us-east-1e"
-  instance_class      = "db.t2.large"
+  availability_zone   = "us-east-1b"
+  instance_class      = "db.t3.large"
   allocated_storage   = 10
   engine              = "mysql"
-  engine_version      = "8.0.28"
+  engine_version      = "8.0.35"
   deletion_protection = true
   enabled_cloudwatch_logs_exports = [
     "slowquery",
@@ -48,7 +48,7 @@ resource "aws_db_instance" "omegaup" {
   backup_retention_period      = 7
   monitoring_interval          = 60
   performance_insights_enabled = true
-  publicly_accessible          = true
+  publicly_accessible          = false
   skip_final_snapshot          = true
   vpc_security_group_ids = [
     aws_security_group.default.id,
@@ -94,6 +94,6 @@ resource "aws_db_instance" "omegaup_readonly" {
   identifier          = "omegaup-db-readonly"
   instance_class      = "db.t3.small"
   replicate_source_db = aws_db_instance.omegaup.id
-  availability_zone   = "us-east-1a"
+  availability_zone   = "us-east-1d"
   skip_final_snapshot = true
 }
