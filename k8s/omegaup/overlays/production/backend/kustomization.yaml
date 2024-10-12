@@ -20,7 +20,7 @@ patches:
           storage: 100Gi
       accessModes:
       - ReadWriteOnce
-      storageClassName: ebs-sc-retain
+      storageClassName: ""
       volumeMode: Filesystem
       volumeName: omegaup-backend-pv
 - patch: |
@@ -34,7 +34,7 @@ patches:
           storage: 50Gi
       accessModes:
       - ReadWriteOnce
-      storageClassName: ebs-sc-retain
+      storageClassName: ""
       volumeMode: Filesystem
       volumeName: omegaup-grader-pv
 - patch: |
