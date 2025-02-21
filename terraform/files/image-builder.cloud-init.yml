@@ -119,6 +119,7 @@ runcmd:
 
     /bin/systemctl daemon-reload
     /bin/systemctl enable td-agent-bit
+    /bin/systemctl enable omegaup-runner
 
 power_state:
     mode: poweroff
