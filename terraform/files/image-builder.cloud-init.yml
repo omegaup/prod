@@ -106,7 +106,7 @@ runcmd:
     # Download all the payloads from GitHub and extract them.
     for url in $(echo "https://github.com/omegaup/omegajail/releases/download/v3.8.0/omegajail-focal-rootfs-x86_64.tar.xz
     https://github.com/omegaup/omegajail/releases/download/v3.10.4/omegajail-focal-distrib-x86_64.tar.xz
-    https://github.com/omegaup/quark/releases/download/v1.9.39/omegaup-runner.tar.xz"); do
+    https://github.com/omegaup/quark/releases/download/v1.9.70/omegaup-runner.tar.xz"); do
       echo "downloading ${url}..."
       curl --silent --location --url "${url}" | tar xJ -C /
     done

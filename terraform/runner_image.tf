@@ -100,7 +100,7 @@ resource "azurerm_network_interface" "runner_image_builder" {
 
   ip_configuration {
     name                          = "omegaup-runner-image-builder-ipconfig"
-    subnet_id                     = azurerm_subnet.runner_vmss_default[count.index].id
+    subnet_id                     = azurerm_subnet.runner_vmss_default["westus2"].id
     private_ip_address_allocation = "Dynamic"
 
     public_ip_address_id = azurerm_public_ip.runner_image_builder[count.index].id
