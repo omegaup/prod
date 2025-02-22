@@ -54,6 +54,8 @@ write_files:
       Group=omegaup
       PermissionsStartOnly=true
       ExecStartPre=/var/lib/omegajail/bin/omegajail-setup
+      ExecStartPre=mkdir -p /sys/fs/cgroup/memory/system.slice/omegaup-runner.service/omegajail
+      ExecStartPre=/var/lib/omegajail/bin/omegajail-setup
       ExecStart=/usr/bin/omegaup-runner
       ExecReload=/bin/kill -s HUP $MAINPID
       WorkingDirectory=/var/lib/omegaup
