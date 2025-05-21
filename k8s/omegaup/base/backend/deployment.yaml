@@ -5,9 +5,10 @@ metadata:
 spec:
   resources:
     requests:
-      storage: 1Gi
+      storage: 100Gi
   accessModes:
   - ReadWriteOnce
+  volumeName: omegaup-backend-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
