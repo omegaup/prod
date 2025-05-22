@@ -13,7 +13,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: omegaup-grader-pvc
+  name: omegaup-grader-pvc2
 spec:
   resources:
     requests:
@@ -103,7 +103,7 @@ spec:
       volumes:
       - name: omegaup-grader
         persistentVolumeClaim:
-          claimName: omegaup-grader-pvc
+          claimName: omegaup-grader-pvc2
       - name: grader-secret
         secret:
           secretName: grader-secret
