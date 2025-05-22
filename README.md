@@ -1,5 +1,5 @@
 # omegaUp infrastructure as code
-
+Update: 5/21/25
 This repository contains omegaUp production settings and configuration.
 
 ## Updating secrets
