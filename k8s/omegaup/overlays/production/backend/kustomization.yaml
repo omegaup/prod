@@ -22,7 +22,7 @@ patches:
       - ReadWriteOnce
       storageClassName: ""
       volumeMode: Filesystem
-      volumeName: omegaup-backend-pv
+      volumeName: omegaup-backend-pv2
 - patch: |
     apiVersion: v1
     kind: PersistentVolumeClaim
