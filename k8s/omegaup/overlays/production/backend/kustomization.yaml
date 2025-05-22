@@ -22,12 +22,12 @@ patches:
       - ReadWriteOnce
       storageClassName: ""
       volumeMode: Filesystem
-      volumeName: omegaup-backend-pv2
+      volumeName: omegaup-backend-pv
 - patch: |
     apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: omegaup-grader-pvc
+      name: omegaup-grader-pvc2
     spec:
       resources:
         requests:
@@ -36,7 +36,7 @@ patches:
       - ReadWriteOnce
       storageClassName: ""
       volumeMode: Filesystem
-      volumeName: omegaup-grader-pv
+      volumeName: omegaup-grader-pv2
 - patch: |
     apiVersion: apps/v1
     kind: Deployment
