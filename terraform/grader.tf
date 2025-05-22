@@ -4,13 +4,13 @@ resource "aws_ebs_volume" "omegaup_grader" {
   type              = "gp2"
 
   tags = {
-    "Name" = "omegaup-grader-pv"
+    "Name" = "omegaup-grader-pv2"
   }
 }
 
 resource "kubernetes_persistent_volume" "omegaup_grader_pv" {
   metadata {
-    name = "omegaup-grader-pv"
+    name = "omegaup-grader-pv2"
     labels = {
     }
   }
