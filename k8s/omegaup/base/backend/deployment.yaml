@@ -11,9 +11,6 @@ spec:
   volumeName: omegaup-backend-pv
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: omegaup-grader-pvc3
 spec:
   resources:
     requests:
@@ -101,11 +98,11 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
       volumes:
-      - name: omegaup-grader
-        persistentVolumeClaim:
-          claimName: omegaup-grader-pvc3
-      - name: grader-secret
-        secret:
+        - emptyDir:
+          sizeLimit: 5Gi
+          name: omegaup-grader
+        - name: grader-secret
+          secret:
           secretName: grader-secret
       securityContext:
         fsGroup: 1000

@@ -57,8 +57,8 @@ spec:
             - name: omegaup-backend
               mountPath: /var/lib/omegaup
           volumes:
-          - name: omegaup-backend
-            persistentVolumeClaim:
-              claimName: omegaup-grader-pvc3
+            - emptyDir:
+                sizeLimit: 5Gi
+              name: omegaup-grader
           securityContext:
             fsGroup: 1000
