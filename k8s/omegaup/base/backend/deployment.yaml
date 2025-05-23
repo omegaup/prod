@@ -101,9 +101,9 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
       volumes:
-      - name: omegaup-grader
-        persistentVolumeClaim:
-          claimName: omegaup-grader-pvc3
+      - emptyDir:
+          sizeLimit: 50Gi
+        name: omegaup-grader
       - name: grader-secret
         secret:
           secretName: grader-secret
