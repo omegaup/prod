@@ -7,4 +7,4 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/version: 932b42629ff54e694ef0bae204a06e797abd710f
+        app.kubernetes.io/version: 950b557ed10b7408214f47cf226d9ded7a05d558
