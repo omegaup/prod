@@ -25,9 +25,6 @@ patches:
       volumeName: omegaup-backend-pv
 - patch: |
     apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: omegaup-grader-pvc3
     spec:
       resources:
         requests:
