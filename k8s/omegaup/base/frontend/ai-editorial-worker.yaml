@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-editorial-worker-deployment
+  labels:
+    app.kubernetes.io/name: ai-editorial-worker
+    app.kubernetes.io/part-of: frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-editorial-worker
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-editorial-worker
+        app.kubernetes.io/part-of: frontend
+        app.kubernetes.io/component: ai-editorial-worker
+    spec:
+      containers:
+      - name: ai-editorial-worker
+        image: omegaup/ai-editorial-worker
+        imagePullPolicy: IfNotPresent
+        command: ['python3', 'worker.py']
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        volumeMounts:
+        - name: omegaup
+          mountPath: /opt/omegaup
+        - name: ai-editorial-secret
+          mountPath: /home/ubuntu/.ai_config
+          subPath: ai_config
+        readinessProbe:
+          exec:
+            command:
+            - python3
+            - -c
+            - "import redis; r=redis.Redis(host='redis-service', port=6379); r.ping()"
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        livenessProbe:
+          exec:
+            command:
+            - python3
+            - -c
+            - "import redis; r=redis.Redis(host='redis-service', port=6379); r.ping()"
+          initialDelaySeconds: 30
+          periodSeconds: 60
+      initContainers:
+      - name: init-volume
+        image: omegaup/frontend
+        imagePullPolicy: IfNotPresent
+        command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+        volumeMounts:
+        - name: omegaup
+          mountPath: /mnt/omegaup
+      volumes:
+      - name: omegaup
+        emptyDir: {}
+      - name: ai-editorial-secret
+        secret:
+          secretName: ai-editorial-secret
