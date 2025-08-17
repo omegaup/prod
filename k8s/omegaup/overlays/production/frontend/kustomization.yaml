@@ -20,6 +20,7 @@ generators:
 - newrelic-secret-generator.yaml
 - omegaup-secret-generator.yaml
 - redis-secret-generator.yaml
+- ai-editorial-secret-generator.yaml
 
 configMapGenerator:
 - behavior: merge
@@ -387,4 +388,6 @@ images:
 - name: omegaup/nginx
   newTag: b0e126c588581576c1c71a768e69f869a21767f6
 - name: omegaup/php
+  newTag: b0e126c588581576c1c71a768e69f869a21767f6
+- name: omegaup/ai-editorial-worker
   newTag: b0e126c588581576c1c71a768e69f869a21767f6

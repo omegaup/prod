@@ -1,0 +1,5 @@
+[ai_deepseek]
+api_key='sandbox-test-deepseek-key'
+
+[ai_openai]
+api_key='sandbox-test-openai-key'
