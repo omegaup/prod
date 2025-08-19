@@ -23,8 +23,8 @@ secretGenerator:
   - redis-secret/redis.conf
   name: redis-secret
 - files:
-  - ai-editorial-secret/ai_config
-  name: ai-editorial-secret
+  - llm-api-secret/ai_config
+  name: llm-api-secret
 
 configMapGenerator:
 - behavior: merge

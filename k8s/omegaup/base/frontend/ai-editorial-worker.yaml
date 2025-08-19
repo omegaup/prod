@@ -40,7 +40,7 @@ spec:
         volumeMounts:
         - name: omegaup
           mountPath: /opt/omegaup
-        - name: ai-editorial-secret
+        - name: llm-api-secret
           mountPath: /home/ubuntu/.ai_config
           subPath: ai_config
         readinessProbe:
@@ -70,6 +70,6 @@ spec:
       volumes:
       - name: omegaup
         emptyDir: {}
-      - name: ai-editorial-secret
+      - name: llm-api-secret
         secret:
-          secretName: ai-editorial-secret
+          secretName: llm-api-secret
