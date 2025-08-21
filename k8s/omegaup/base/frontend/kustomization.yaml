@@ -8,6 +8,7 @@ resources:
 - cronjobs.yaml
 - redis.yaml
 - db-migrate.yaml
+- ai-editorial-worker.yaml
 
 configMapGenerator:
 - name: fluent-bit-config

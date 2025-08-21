@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-editorial-worker-deployment
+  labels:
+    app.kubernetes.io/name: ai-editorial-worker
+    app.kubernetes.io/part-of: frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-editorial-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-editorial-worker
+        app.kubernetes.io/part-of: frontend
+        app.kubernetes.io/component: ai-editorial-worker
+    spec:
+      containers:
+      - name: ai-editorial-worker
+        image: omegaup/ai-editorial-worker
+        imagePullPolicy: IfNotPresent
+        command: ["python3", "/opt/omegaup/stuff/ai_editorial_worker/worker.py"]
+        args: ["--worker-id=1"]
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: "redis"
+        - name: OMEGAUP_BASE_URL
+          value: "http://frontend-service:8000"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - name: omegaup
+          mountPath: /opt/omegaup
+        - name: llm-api-secret
+          mountPath: /home/ubuntu/.my.cnf
+          subPath: ai_config
+      initContainers:
+      - name: init-volume
+        image: omegaup/frontend
+        imagePullPolicy: IfNotPresent
+        command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+        volumeMounts:
+        - name: omegaup
+          mountPath: /mnt/omegaup
+      volumes:
+      - name: omegaup
+        emptyDir: {}
+      - name: llm-api-secret
+        secret:
+          secretName: llm-api-secret

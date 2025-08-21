@@ -22,6 +22,9 @@ secretGenerator:
 - files:
   - redis-secret/redis.conf
   name: redis-secret
+- files:
+  - llm-api-secret/ai_config
+  name: llm-api-secret
 
 configMapGenerator:
 - behavior: merge
@@ -776,6 +779,8 @@ images:
 - name: omegaup/frontend-sidecar
   newTag: 374da41169760b78dd12b57375014e1ac5a044a0
 - name: omegaup/nginx
+  newTag: 374da41169760b78dd12b57375014e1ac5a044a0
+- name: omegaup/ai-editorial-worker
   newTag: 374da41169760b78dd12b57375014e1ac5a044a0
 - name: omegaup/php
   newTag: 374da41169760b78dd12b57375014e1ac5a044a0
