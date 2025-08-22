@@ -22,9 +22,6 @@ secretGenerator:
 - files:
   - redis-secret/redis.conf
   name: redis-secret
-- files:
-  - llm-api-secret/ai_config
-  name: llm-api-secret
 
 configMapGenerator:
 - behavior: merge
@@ -41,6 +38,7 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
+- llm-api-secret.yml
 
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
@@ -782,8 +780,6 @@ images:
 - name: omegaup/frontend-sidecar
   newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/nginx
-  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
-- name: omegaup/ai-editorial-worker
   newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/php
   newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
