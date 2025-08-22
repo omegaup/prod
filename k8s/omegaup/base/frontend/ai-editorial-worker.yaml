@@ -45,7 +45,7 @@ spec:
           mountPath: /opt/omegaup
         - name: llm-api-secret
           mountPath: /home/ubuntu/.my.cnf
-          subPath: ai_config
+          subPath: deepseek
       initContainers:
       - name: init-volume
         image: omegaup/frontend
