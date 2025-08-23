@@ -13,6 +13,7 @@ commonLabels:
 generators:
 - omegaup-secret-generator.yaml
 - newrelic-secret-generator.yaml
+- llm-api-secret-generator.yaml
 
 secretGenerator:
 - files:
@@ -38,12 +39,7 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
-- llm-api-secret.yml
 
-            # TODO: Remove once we migrate to jammy.
-            # TODO: Remove once we migrate to jammy.
-            # TODO: Remove once we migrate to jammy.
-            # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
@@ -778,12 +774,12 @@ patches:
 
 images:
 - name: omegaup/ai-editorial-worker
-  newTag: 4301dbbb73e8d345a263d9bbd8386bcfd653093f
+  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/frontend
-  newTag: 4301dbbb73e8d345a263d9bbd8386bcfd653093f
+  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/frontend-sidecar
-  newTag: 4301dbbb73e8d345a263d9bbd8386bcfd653093f
+  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/nginx
-  newTag: 4301dbbb73e8d345a263d9bbd8386bcfd653093f
+  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
 - name: omegaup/php
-  newTag: 4301dbbb73e8d345a263d9bbd8386bcfd653093f
+  newTag: 1ba29fafd1a7e60e701ea966e3ebaa9936f52734
