@@ -13,6 +13,7 @@ commonLabels:
 generators:
 - omegaup-secret-generator.yaml
 - newrelic-secret-generator.yaml
+- llm-api-secret-generator.yaml
 
 secretGenerator:
 - files:
@@ -38,7 +39,6 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
-- llm-api-secret.yml
 
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
