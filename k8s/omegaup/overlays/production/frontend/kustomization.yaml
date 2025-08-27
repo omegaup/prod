@@ -20,6 +20,7 @@ generators:
 - newrelic-secret-generator.yaml
 - omegaup-secret-generator.yaml
 - redis-secret-generator.yaml
+- llm-api-secret-generator.yaml
 
 configMapGenerator:
 - behavior: merge
