@@ -29,8 +29,6 @@ spec:
           value: "redis-service"
         - name: REDIS_PORT
           value: "6379"
-        - name: REDIS_PASSWORD
-          value: "redis"
         - name: OMEGAUP_BASE_URL
           value: "http://frontend-service:8000"
         resources:
@@ -46,6 +44,8 @@ spec:
         - name: llm-api-secret
           mountPath: /home/ubuntu/.my.cnf
           subPath: deepseek
+        - name: redis-secret
+          mountPath: /etc/redis
       initContainers:
       - name: init-volume
         image: omegaup/frontend
@@ -60,3 +60,6 @@ spec:
       - name: llm-api-secret
         secret:
           secretName: llm-api-secret
+      - name: redis-secret
+        secret:
+          secretName: redis-secret
