@@ -7,6 +7,8 @@ resources:
 - ../../../base/backend
 - deployment.yaml
 - grader-metrics.yaml
+- runner-deployment.yaml
+- grader-ingress.yaml
 
 patches:
 - patch: |
@@ -79,6 +81,7 @@ generators:
 - grader-metrics-secret-generator.yaml
 - broadcaster-secret-generator.yaml
 - gitserver-secret-generator.yaml
+- runner-secret-generator.yaml
 
 images:
 - name: omegaup/backend
