@@ -206,6 +206,7 @@ configMapGenerator:
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
+            # TODO: Remove once we migrate to jammy.
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -397,12 +398,12 @@ patches:
 
 images:
 - name: omegaup/ai-editorial-worker
-  newTag: 432eaf3631013bd15213219f15560b162414e56e
+  newTag: 30bea169c888db1c646a090747c477b410378a93
 - name: omegaup/frontend
-  newTag: 432eaf3631013bd15213219f15560b162414e56e
+  newTag: 30bea169c888db1c646a090747c477b410378a93
 - name: omegaup/frontend-sidecar
-  newTag: 432eaf3631013bd15213219f15560b162414e56e
+  newTag: 30bea169c888db1c646a090747c477b410378a93
 - name: omegaup/nginx
-  newTag: 432eaf3631013bd15213219f15560b162414e56e
+  newTag: 30bea169c888db1c646a090747c477b410378a93
 - name: omegaup/php
-  newTag: 432eaf3631013bd15213219f15560b162414e56e
+  newTag: 30bea169c888db1c646a090747c477b410378a93
