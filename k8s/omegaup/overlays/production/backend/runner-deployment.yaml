@@ -1,0 +1,55 @@
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
+  name: runner-deployment  
+  labels:  
+    app.kubernetes.io/name: runner  
+    app.kubernetes.io/part-of: backend  
+    env: production  
+spec:  
+  replicas: 0  # Disabled until IP header validation is fixed
+  revisionHistoryLimit: 1  
+  selector:  
+    matchLabels:  
+      app.kubernetes.io/name: runner  
+  strategy:  
+    type: RollingUpdate  
+  template:  
+    metadata:  
+      labels:  
+        app.kubernetes.io/name: runner  
+        app.kubernetes.io/version: "v1.9.67"  
+        app.kubernetes.io/part-of: backend  
+        env: production  
+      annotations:  
+        prometheus.io/port: '6060'  
+        prometheus.io/scrape: 'true'  
+    spec:  
+      containers:  
+      - name: runner  
+        image: omegaup/runner:v1.9.67  
+        command: ['/usr/bin/omegaup-runner']
+        args: ['-config', '/etc/omegaup/runner/config.json']  
+        ports:  
+        - name: prometheus  
+          containerPort: 6060  
+        resources:  
+          limits:  
+            cpu: 500m  
+            memory: 512Mi  
+          requests:  
+            cpu: 200m  
+            memory: 128Mi  
+        volumeMounts:  
+        - name: runner-secret  
+          mountPath: /etc/omegaup/runner  
+        - name: runner-secret  
+          mountPath: /etc/omegaup/grader
+        - name: omegaup-runner  
+          mountPath: /var/lib/omegaup  
+      volumes:  
+      - name: omegaup-runner  
+        emptyDir: {}  
+      - name: runner-secret  
+        secret:  
+          secretName: runner-secret
