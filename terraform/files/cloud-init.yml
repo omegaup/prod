@@ -63,6 +63,21 @@ runcmd:
         licenseKey ${newrelic_license}
     EOF
 
+    # Wait for Azure Key Vault extension to download the certificate (up to 5 minutes)
+    echo "Waiting for Azure Key Vault extension to download certificate..."
+    for i in {1..60}; do
+        if [ -f /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner ] && [ -s /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner ]; then
+            echo "Certificate file found after $i attempts"
+            break
+        fi
+        echo "Attempt $i: Certificate not yet available, waiting 5 seconds..."
+        sleep 5
+    done
+
+    if [ ! -f /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner ]; then
+        echo "ERROR: Certificate file not found after 5 minutes. omegaup-runner will fail to start."
+    fi
+
     # Split the certificate into private key and certificate chain.
     openssl pkey \
         -in /var/lib/waagent/Microsoft.Azure.KeyVault/omegaup-runner-vault.omegaup-runner \
