@@ -36,11 +36,11 @@ spec:
     matchLabels:
       app.kubernetes.io/name: grader
   strategy:
-    # This might cause some runners to get really confused and send the wrong
-    # thing to the wrong server, _but_ everything should be okay in the end:
-    # they will be able to retry. The important thing is that the frontend can
-    # still send submissions without interruption.
-    type: RollingUpdate
+    # Changed to Recreate to avoid EBS volume deadlock (ReadWriteOnce).
+    # This causes ~30s downtime during deployments, but prevents the issue
+    # where a new pod can't mount the volume while the old pod is still running.
+    # See: docs/post-mortem-2025-12-16-evaluaciones.md
+    type: Recreate
   template:
     metadata:
       labels:
