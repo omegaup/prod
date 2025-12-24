@@ -10,17 +10,6 @@ spec:
   - ReadWriteOnce
   volumeName: omegaup-backend-pv
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: omegaup-grader-pvc3
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
----
 apiVersion: apps/v1
 kind: Deployment
 
