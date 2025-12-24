@@ -103,7 +103,7 @@ spec:
       volumes:
       - name: omegaup-grader
         persistentVolumeClaim:
-          claimName: omegaup-grader-pvc3
+          claimName: omegaup-grader-efs-pvc
       - name: grader-secret
         secret:
           secretName: grader-secret
