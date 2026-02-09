@@ -44,13 +44,13 @@
           const details = await (
             await fetch(`/submission/${submissionID}/details/`)
           ).text();
-          template.querySelector("td[data-source] pre").append(source);
+          template.querySelector("td[data-source] pre").textContent = source;
           template
             .querySelector("td[data-details] pre[data-details]")
-            .append(details);
+            .textContent = details;
           template
             .querySelector("td[data-details] pre[data-logs]")
-            .append(logs);
+            .textContent = logs;
           template.querySelector(
             "td[data-download] a"
           ).href = `/submission/${submissionID}/download`;
