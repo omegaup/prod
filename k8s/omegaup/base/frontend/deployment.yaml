@@ -26,10 +26,10 @@ spec:
         resources:
           limits:
             cpu: 1
-            memory: 768Mi
+            memory: 1Gi
           requests:
             cpu: 500m
-            memory: 256Mi
+            memory: 512Mi
         volumeMounts:
         - name: frontend-secret
           mountPath: /etc/omegaup/frontend
