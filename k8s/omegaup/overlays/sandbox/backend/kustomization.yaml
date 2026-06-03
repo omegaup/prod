@@ -18,8 +18,19 @@ generators:
 resources:
 - ../../../base/backend
 - backend.yaml
+- grader-efs-pvc.yaml
 
 patches:
+- target:
+    kind: PersistentVolumeClaim
+    name: omegaup-backend-pvc
+    version: v1
+  patch: |-
+    - op: replace
+      path: /spec/resources/requests/storage
+      value: 1Gi
+    - op: remove
+      path: /spec/volumeName
 - patch: |-
     apiVersion: apps/v1
     kind: Deployment
