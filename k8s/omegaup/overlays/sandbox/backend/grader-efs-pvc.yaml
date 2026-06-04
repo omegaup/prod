@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: omegaup-grader-pvc
+  name: omegaup-grader-efs-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
-  storageClassName: ebs-sc
+  - ReadWriteMany
+  storageClassName: efs-sc
   resources:
     requests:
       storage: 1Gi

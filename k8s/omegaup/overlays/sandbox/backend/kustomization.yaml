@@ -18,7 +18,7 @@ generators:
 resources:
 - ../../../base/backend
 - backend.yaml
-- grader-pvc.yaml
+- grader-efs-pvc.yaml
 
 patches:
 - target:
@@ -31,15 +31,6 @@ patches:
       value: 1Gi
     - op: remove
       path: /spec/volumeName
-- target:
-    group: apps
-    kind: Deployment
-    name: grader-deployment
-    version: v1
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/volumes/0/persistentVolumeClaim/claimName
-      value: omegaup-grader-pvc
 - patch: |-
     apiVersion: apps/v1
     kind: Deployment
