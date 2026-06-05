@@ -5,7 +5,7 @@ metadata:
     app: mysql-service
   name: mysql-service
 spec:
-  externalName: omegaup-db.csxxrhqs66it.us-east-1.rds.amazonaws.com
+  externalName: omegaup-db-proxy.proxy-csxxrhqs66it.us-east-1.rds.amazonaws.com
   selector:
     app: mysql-service
   type: ExternalName
