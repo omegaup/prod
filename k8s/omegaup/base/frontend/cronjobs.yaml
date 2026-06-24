@@ -138,3 +138,49 @@ spec:
           - name: cronjobs-secret
             secret:
               secretName: cronjobs-secret
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: plagiarism_detector
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: plagiarism-detector
+            app.kubernetes.io/part-of: frontend-cronjobs
+            app.kubernetes.io/component: omegaup-frontend
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: cronjob
+            image: omegaup/frontend-sidecar
+            imagePullPolicy: IfNotPresent
+            command:
+            - /opt/omegaup/stuff/cron/plagiarism_detector.py
+            - --log-json
+            - --port=3306
+            volumeMounts:
+            - name: omegaup
+              mountPath: /opt/omegaup
+            - name: cronjobs-secret
+              mountPath: /home/ubuntu/.my.cnf
+              subPath: my.cnf
+          initContainers:
+          - name: init-volume
+            image: omegaup/frontend
+            imagePullPolicy: IfNotPresent
+            command: ['rsync', '-az', '/opt/omegaup/', '/mnt/omegaup/']
+            volumeMounts:
+            - name: omegaup
+              mountPath: /mnt/omegaup
+          volumes:
+          - name: omegaup
+            emptyDir: {}
+          - name: cronjobs-secret
+            secret:
+              secretName: cronjobs-secret
