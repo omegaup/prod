@@ -51,6 +51,12 @@ spec:
       - name: fluent-bit
         image: omegaup/fluent-bit:1.8.0
         imagePullPolicy: IfNotPresent
+        env:
+        - name: NEW_RELIC_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: fluent-bit-newrelic-secret
+              key: license-key
         ports:
           - containerPort: 2020
         resources:
