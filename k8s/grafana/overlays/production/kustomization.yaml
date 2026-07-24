@@ -8,6 +8,8 @@ commonLabels:
 
 bases:
 - ../../base
+resources:
+- loki-storage.yaml
 configMapGenerator:
 - name: grafana-config
   files:
