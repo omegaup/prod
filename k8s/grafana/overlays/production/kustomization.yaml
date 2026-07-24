@@ -27,6 +27,25 @@ generators:
 - grafana-secret-generator.yaml
 patches:
 - patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: loki-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
+          containers:
+          - name: loki
+            volumeMounts:
+            - name: loki-data
+              mountPath: /loki
+          volumes:
+          - name: loki-data
+            persistentVolumeClaim:
+              claimName: loki-pvc
+- patch: |-
     - op: replace
       path: /spec/rules/0/host
       value: grafana.omegaup.com
