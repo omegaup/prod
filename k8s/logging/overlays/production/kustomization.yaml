@@ -11,3 +11,4 @@ bases:
 
 generators:
 - fluent-bit-config-generator.yaml
+- fluent-bit-newrelic-secret-generator.yaml
