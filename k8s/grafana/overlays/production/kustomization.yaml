@@ -25,6 +25,7 @@ configMapGenerator:
   - prometheus-config/scrape-configs/runners.yml
 generators:
 - grafana-secret-generator.yaml
+- prometheus-newrelic-secret-generator.yaml
 patches:
 - patch: |-
     apiVersion: apps/v1
@@ -129,7 +130,14 @@ patches:
               - name: prometheus-config
                 mountPath: /etc/prometheus.tmpl/scrape-configs/runners.yml
                 subPath: runners.yml
+              - name: prometheus-newrelic-secret
+                mountPath: /etc/prometheus/secrets/newrelic-license-key
+                subPath: license-key
+                readOnly: true
           volumes:
           - name: prometheus-config
             configMap:
               name: prometheus-config
+          - name: prometheus-newrelic-secret
+            secret:
+              secretName: prometheus-newrelic-secret
