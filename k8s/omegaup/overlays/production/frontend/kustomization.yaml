@@ -30,6 +30,10 @@ configMapGenerator:
   - nginx-config/grader-upstream.conf
   - nginx-config/realip.conf
   name: nginx-config
+- behavior: merge
+  files:
+  - php-config/php-fpm.conf
+  name: php-config
 
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
