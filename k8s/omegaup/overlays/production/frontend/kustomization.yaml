@@ -13,6 +13,7 @@ commonLabels:
 resources:
 - ../../../base/frontend
 - database.yaml
+- redis-storage.yaml
 
 generators:
 - cronjobs-secret-generator.yaml
@@ -437,6 +438,7 @@ patches:
     kind: Deployment
     name: frontend-deployment
     version: v1
+- path: redis-deployment.yaml
 
 images:
 - name: omegaup/ai-editorial-worker

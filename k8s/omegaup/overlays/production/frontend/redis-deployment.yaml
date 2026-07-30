@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
+      containers:
+      - name: redis
+        image: redis:7.4.3
+        command:
+        - redis-server
+        - /etc/redis/redis.conf
+        - --maxmemory
+        - 200mb
+        resources:
+          limits:
+            cpu: 50m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: redis-pvc-v2
