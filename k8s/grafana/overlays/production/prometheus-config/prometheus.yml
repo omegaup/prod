@@ -3,7 +3,7 @@
 # Anything that is NOT a scrape config must therefore appear ABOVE the
 # `scrape_configs:` key, and `scrape_configs:` must remain the last line.
 remote_write:
-  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=omegaup-eks
+  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=omegaup-eks-cluster
     authorization:
       credentials_file: /etc/prometheus/secrets/newrelic-license-key
     write_relabel_configs:
