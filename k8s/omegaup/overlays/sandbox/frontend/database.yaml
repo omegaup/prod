@@ -55,8 +55,10 @@ spec:
         app.kubernetes.io/name: mysql
         app.kubernetes.io/version: "8.0"
     spec:
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
       containers:
-      - image: mysql:8.0
+      - image: mysql:8.0@sha256:bf577825b52ab281d6281fb281eabbfdc73507eda8f2c2745790251533ef0306
         name: mysql
         env:
         - name: MYSQL_DATABASE
