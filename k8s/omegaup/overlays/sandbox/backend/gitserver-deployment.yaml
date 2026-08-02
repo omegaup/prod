@@ -4,7 +4,13 @@ kind: Deployment
 metadata:
   name: gitserver-deployment
 spec:
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/version: v1.9.17
+    spec:
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
+        topology.kubernetes.io/zone: us-east-1b
