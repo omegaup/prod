@@ -39,6 +39,7 @@ configMapGenerator:
 resources:
 - ../../../base/frontend
 - database.yaml
+- redis-storage.yaml
 
             # TODO: Remove once we migrate to jammy.
             # TODO: Remove once we migrate to jammy.
@@ -1284,6 +1285,7 @@ patches:
     kind: Deployment
     name: frontend-deployment
     version: v1
+- path: redis-deployment.yaml
 
 images:
 - name: omegaup/ai-editorial-worker
