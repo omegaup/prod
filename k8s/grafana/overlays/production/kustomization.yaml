@@ -75,6 +75,8 @@ patches:
     spec:
       template:
         spec:
+          nodeSelector:
+            eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
           containers:
             - name: grafana
               volumeMounts:
