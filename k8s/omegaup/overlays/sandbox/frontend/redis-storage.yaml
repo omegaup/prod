@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc-v2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: redis-sandbox-gp3-retain
+  resources:
+    requests:
+      storage: 1Gi
