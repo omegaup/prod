@@ -14,3 +14,9 @@ spec:
       nodeSelector:
         eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
         topology.kubernetes.io/zone: us-east-1b
+      containers:
+      - name: gitserver
+        readinessProbe:
+          httpGet:
+            path: /health/live
+            port: gitserver
