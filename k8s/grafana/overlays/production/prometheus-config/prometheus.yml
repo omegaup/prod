@@ -1,1 +1,19 @@
+# NOTE: the prometheus container builds its runtime config by appending each
+# file in scrape-configs/ to the end of this file (see grafana/base/deployment.yaml).
+# Anything that is NOT a scrape config must therefore appear ABOVE the
+# `scrape_configs:` key, and `scrape_configs:` must remain the last line.
+remote_write:
+  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=omegaup-eks-cluster
+    authorization:
+      credentials_file: /etc/prometheus/secrets/newrelic-license-key
+    write_relabel_configs:
+      # Ship only the series New Relic alerts on. Everything else (node-exporter,
+      # cadvisor, apiserver, ...) stays in Prometheus/Grafana and costs nothing.
+      - source_labels: [__name__]
+        regex: 'quark_grader_.*'
+        action: keep
+      # runner_public_ip churns every time a VMSS instance is replaced, which
+      # creates a new time series each time. runner_hostname is the stable identity.
+      - regex: runner_public_ip
+        action: labeldrop
 scrape_configs:
