@@ -20,7 +20,6 @@ data:
     FLUSH PRIVILEGES;
   docker.cnf: |
     [mysqld]
-    skip-host-cache
     skip-name-resolve
     key_buffer_size         = 8M
     read_buffer_size        = 60K
@@ -53,12 +52,12 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: mysql
-        app.kubernetes.io/version: "8.0"
+        app.kubernetes.io/version: "8.4"
     spec:
       nodeSelector:
         eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
       containers:
-      - image: mysql:8.0@sha256:bf577825b52ab281d6281fb281eabbfdc73507eda8f2c2745790251533ef0306
+      - image: mysql:8.4.10@sha256:8dbcf531a03aade657e181b9cf2f1d1803ce621a1d55610cb44cb531ab7d7db6
         name: mysql
         env:
         - name: MYSQL_DATABASE
@@ -72,13 +71,32 @@ spec:
         ports:
         - containerPort: 3306
           name: mysql
+        startupProbe:
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - 127.0.0.1
+            - --silent
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - 127.0.0.1
+            - --silent
+          periodSeconds: 5
         resources:
           requests:
             cpu: 10m
-            memory: 128Mi
+            memory: 256Mi
           limits:
             cpu: 128m
-            memory: 256Mi
+            memory: 512Mi
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
