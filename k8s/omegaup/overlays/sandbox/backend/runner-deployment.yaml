@@ -7,13 +7,4 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/version: v1.9.67
-    spec:
-      # runner v1.9.67 queries ifconfig.me without validating its response and
-      # can send an invalid OmegaUp-Runner-PublicIP header. Sandbox does not
-      # need a public runner address, so make that optional lookup fail fast
-      # until an image containing the upstream fix is published.
-      hostAliases:
-      - ip: 127.0.0.1
-        hostnames:
-        - ifconfig.me
+        app.kubernetes.io/version: v1.9.72
