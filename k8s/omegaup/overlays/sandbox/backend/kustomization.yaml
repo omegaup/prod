@@ -84,4 +84,4 @@ images:
 - name: omegaup/gitserver
   newTag: v1.9.17
 - name: omegaup/runner
-  newTag: v1.9.67
+  newTag: v1.9.72
