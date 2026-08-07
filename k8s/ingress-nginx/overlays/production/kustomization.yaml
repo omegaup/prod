@@ -8,3 +8,14 @@ commonLabels:
 
 bases:
 - ../../base
+
+patches:
+- patch: |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: ingress-nginx-controller
+      namespace: ingress-nginx
+    data:
+      http-snippet: |
+        limit_req_zone $server_name zone=omegaup_problem_global:10m rate=1r/s;
