@@ -11,6 +11,8 @@ metadata:
       if ($http_user_agent ~* "(Applebot|bingbot|Bytespider|OAI-SearchBot|Amazonbot|PetalBot|SemrushBot)") {
         return 429;
       }
+      limit_req zone=omegaup_problem_global burst=2 nodelay;
+      limit_req_status 429;
 spec:
   rules:
   - host: omegaup.com
