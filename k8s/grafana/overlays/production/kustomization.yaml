@@ -20,6 +20,7 @@ configMapGenerator:
   - prometheus-config/scrape-configs/kubernetes-apiservers.yml
   - prometheus-config/scrape-configs/kubernetes-endpoints.yml
   - prometheus-config/scrape-configs/kubernetes-nodes.yml
+  - prometheus-config/scrape-configs/kubernetes-nodes-cadvisor.yml
   - prometheus-config/scrape-configs/kubernetes-pods.yml
   - prometheus-config/scrape-configs/kubernetes-services.yml
   - prometheus-config/scrape-configs/runners.yml
@@ -123,6 +124,9 @@ patches:
               - name: prometheus-config
                 mountPath: /etc/prometheus.tmpl/scrape-configs/kubernetes-nodes.yml
                 subPath: kubernetes-nodes.yml
+              - name: prometheus-config
+                mountPath: /etc/prometheus.tmpl/scrape-configs/kubernetes-nodes-cadvisor.yml
+                subPath: kubernetes-nodes-cadvisor.yml
               - name: prometheus-config
                 mountPath: /etc/prometheus.tmpl/scrape-configs/kubernetes-pods.yml
                 subPath: kubernetes-pods.yml

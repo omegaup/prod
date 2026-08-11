@@ -1,0 +1,14 @@
+# Same as kubernetes-nodes, but kubelet's cAdvisor endpoint — needed for
+# container_memory_* / container_oom_events_total (not on /metrics).
+job_name: kubernetes-nodes-cadvisor
+scheme: https
+metrics_path: /metrics/cadvisor
+tls_config:
+  ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+authorization:
+  credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+kubernetes_sd_configs:
+  - role: node
+relabel_configs:
+  - action: labelmap
+    regex: __meta_kubernetes_node_label_(.+)

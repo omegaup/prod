@@ -9,11 +9,13 @@ remote_write:
     write_relabel_configs:
       # Ship only the series New Relic alerts on. Everything else (node-exporter,
       # cadvisor, apiserver, ...) stays in Prometheus/Grafana and costs nothing.
+      # ponytail: cadvisor OOM + memory-vs-limit instead of deploying kube-state-metrics
       - source_labels: [__name__]
-        regex: 'quark_grader_.*'
+        regex: 'quark_grader_.*|container_oom_events_total|container_memory_working_set_bytes|container_spec_memory_limit_bytes'
         action: keep
       # runner_public_ip churns every time a VMSS instance is replaced, which
       # creates a new time series each time. runner_hostname is the stable identity.
-      - regex: runner_public_ip
+      # id/image* are high-cardinality cAdvisor labels we don't alert on.
+      - regex: runner_public_ip|id|image_id|image
         action: labeldrop
 scrape_configs:
