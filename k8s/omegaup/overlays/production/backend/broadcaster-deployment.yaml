@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/version: v1.9.66
+        app.kubernetes.io/version: v1.9.74
     spec:
       nodeSelector:
         eks.amazonaws.com/nodegroup: omegaup-eks-nodes-al2023
