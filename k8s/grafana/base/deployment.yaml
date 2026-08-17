@@ -89,7 +89,7 @@ metadata:
 spec:
   resources:
     requests:
-      storage: 1Gi
+      storage: 10Gi
   accessModes:
   - ReadWriteOnce
 ---
