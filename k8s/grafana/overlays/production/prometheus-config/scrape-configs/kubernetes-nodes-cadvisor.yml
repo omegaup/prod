@@ -12,3 +12,10 @@ kubernetes_sd_configs:
 relabel_configs:
   - action: labelmap
     regex: __meta_kubernetes_node_label_(.+)
+metric_relabel_configs:
+  # Keep only the cAdvisor series used by New Relic alerts. Filtering here,
+  # rather than only in remote_write, prevents all other container series from
+  # filling Prometheus' local WAL.
+  - source_labels: [__name__]
+    regex: 'container_oom_events_total|container_memory_working_set_bytes|container_spec_memory_limit_bytes'
+    action: keep
