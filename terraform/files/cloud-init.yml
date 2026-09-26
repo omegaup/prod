@@ -1,13 +1,13 @@
 #cloud-config
 users:
   - name: lhchavez
-    home: /home/lhchavez
+    homedir: /home/lhchavez
     shell: /bin/bash
     ssh_authorized_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnjhoOKyTPYdNViybSdZUobS5WsOuhZnGO3QWQqI8K5+op8gEzBJaV1XfwVMewbBFv1t8NNANBlqbkjAGwrbLVixz156fcnTpVKaXPF7L31UTSv3x3/7gjRkAnNAexVNQOR5uLzEqaC1WLzTZf1iN4VMLskmuEE1PYAR7JBoE7jwKc5w67Iu0aELhiZ2nGSXkNU9fuSA3O/EFRQMtUVY8KvRuCN5iSTuHhL3vm4TE39ZYfSCsPok0PAbnR0eIFObQYkp/EaJZitqALmxr9gFsK5AxlfbbGiOXlUP1et4tA1/6ep3CPCnUy6TNCwKuOdC8kMzHg9tYIl0qtpgibuLU3 lhchavez@lhc-desktop
     sudo: ALL=(ALL) NOPASSWD:ALL
   - name: omegaup
-    home: /var/lib/omegaup
+    homedir: /var/lib/omegaup
     shell: /usr/sbin/nologin
 
 runcmd:
@@ -56,7 +56,7 @@ runcmd:
             }
     }
     EOF
-    cat <<EOF > /etc/td-agent-bit/newrelic_output.conf
+    cat <<EOF > /etc/fluent-bit/newrelic_output.conf
     [OUTPUT]
         name       newrelic
         match      *
@@ -96,4 +96,4 @@ runcmd:
     /bin/systemctl daemon-reload
     /bin/systemctl enable omegaup-runner
     /bin/systemctl start omegaup-runner
-    /bin/systemctl restart td-agent-bit
+    /bin/systemctl restart fluent-bit
