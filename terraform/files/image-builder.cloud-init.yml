@@ -139,4 +139,4 @@ runcmd:
 power_state:
     mode: poweroff
     timeout: 30
-    condition: test -f /run/omegaup-image-build-success
+    condition: false
