@@ -78,9 +78,15 @@ write_files:
 
 runcmd:
   - |
+    set -eu
+    rm -f /run/omegaup-image-build-success
+    payload_dir="$(mktemp -d /var/tmp/omegaup-payloads.XXXXXX)"
+    trap 'rm -rf "${payload_dir}"' 0
+
     curl -fsSL https://packages.fluentbit.io/fluentbit.key \
-      | gpg --dearmor \
-      -o /usr/share/keyrings/fluentbit-keyring.gpg
+      -o "${payload_dir}/fluentbit.key"
+    gpg --dearmor -o /usr/share/keyrings/fluentbit-keyring.gpg \
+      "${payload_dir}/fluentbit.key"
 
     echo "deb [signed-by=/usr/share/keyrings/fluentbit-keyring.gpg] https://packages.fluentbit.io/ubuntu/jammy jammy main" \
       > /etc/apt/sources.list.d/fluent-bit.list
@@ -91,17 +97,30 @@ runcmd:
       fluent-bit
 
     # Download all the payloads from GitHub and extract them.
-    for url in $(echo "https://github.com/omegaup/omegajail/releases/download/v3.13.1/omegajail-jammy-rootfs-x86_64.tar.xz
-    https://github.com/omegaup/omegajail/releases/download/v3.13.1/omegajail-jammy-distrib-x86_64.tar.xz
-    https://github.com/omegaup/quark/releases/download/v1.9.77/omegaup-runner.tar.xz"); do
+    for url in \
+      "https://github.com/omegaup/omegajail/releases/download/v3.13.0/omegajail-jammy-rootfs-x86_64.tar.xz" \
+      "https://github.com/omegaup/omegajail/releases/download/v3.13.1/omegajail-jammy-distrib-x86_64.tar.xz" \
+      "https://github.com/omegaup/quark/releases/download/v1.9.77/omegaup-runner.tar.xz"; do
       echo "downloading ${url}..."
-      curl --silent --location --url "${url}" | tar xJ -C /
+      curl -fsSL --url "${url}" --output "${payload_dir}/payload.tar.xz"
+      xz --test "${payload_dir}/payload.tar.xz"
+      tar xJf "${payload_dir}/payload.tar.xz" -C /
+      rm -f "${payload_dir}/payload.tar.xz"
     done
+
+    test -d /var/lib/omegajail/root
+    test -d /var/lib/omegajail/root/home
+    test -d /var/lib/omegajail/root-compilers
+    test -d /var/lib/omegajail/root-compilers/home
+    test -x /var/lib/omegajail/bin/omegajail
+    test -d /var/lib/omegajail/policies
 
     mkdir -p /lib/fluent-bit
 
     curl \
+      --fail \
       --silent \
+      --show-error \
       --location \
       --url https://github.com/newrelic/newrelic-fluent-bit-output/releases/download/v1.12.1/out_newrelic-linux-amd64-1.12.1.so \
       --output /lib/fluent-bit/out_newrelic-linux-amd64-1.12.1.so
@@ -113,8 +132,11 @@ runcmd:
     /bin/systemctl daemon-reload
     /bin/systemctl enable fluent-bit
     /bin/systemctl enable omegaup-runner
+    rm -rf "${payload_dir}"
+    trap - 0
+    touch /run/omegaup-image-build-success
 
 power_state:
     mode: poweroff
     timeout: 30
-    condition: True
+    condition: test -f /run/omegaup-image-build-success
