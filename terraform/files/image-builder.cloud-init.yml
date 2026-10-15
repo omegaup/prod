@@ -99,7 +99,7 @@ runcmd:
     # Download all the payloads from GitHub and extract them.
     for url in \
       "https://github.com/omegaup/omegajail/releases/download/v3.13.0/omegajail-jammy-rootfs-x86_64.tar.xz" \
-      "https://github.com/omegaup/omegajail/releases/download/v3.13.1/omegajail-jammy-distrib-x86_64.tar.xz" \
+      "https://github.com/omegaup/omegajail/releases/download/v3.13.2/omegajail-jammy-distrib-x86_64.tar.xz" \
       "https://github.com/omegaup/quark/releases/download/v1.9.77/omegaup-runner.tar.xz"; do
       echo "downloading ${url}..."
       curl -fsSL --url "${url}" --output "${payload_dir}/payload.tar.xz"
