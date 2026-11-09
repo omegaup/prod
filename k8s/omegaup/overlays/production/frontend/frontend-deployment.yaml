@@ -8,3 +8,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/version: 4d09b07530b314e7781aaf8abe76572181cc5a57
+    spec:
+      containers:
+        - name: php
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 768Mi
