@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/version: v1.9.74
+        app.kubernetes.io/version: v1.9.76
     spec:
       # With EFS (ReadWriteMany), no need for nodeAffinity - pod can run on any node
       affinity:
