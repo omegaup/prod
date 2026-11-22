@@ -29,7 +29,12 @@ data "azurerm_image" "runner" {
   resource_group_name = azurerm_resource_group.runner_image_builder.name
 }
 
-resource "azurerm_shared_image_version" "runner" {
+moved {
+  from = azurerm_shared_image_version.runner
+  to   = azurerm_shared_image_version.runner_1_0_11
+}
+
+resource "azurerm_shared_image_version" "runner_1_0_11" {
   name                = "1.0.11"
   gallery_name        = azurerm_shared_image_gallery.runner.name
   image_name          = azurerm_shared_image.runner.name
@@ -131,8 +136,8 @@ resource "azurerm_linux_virtual_machine" "runner_image_builder" {
 
   source_image_reference {
     publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
     version   = "latest"
   }
 
