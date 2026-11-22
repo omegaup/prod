@@ -1,8 +1,10 @@
 # Releasing a new runner image
 
-Use a fresh builder VM created with the current cloud-config. The builder stays
-running so Run Command can validate it before capture. Do not restart or modify
-it between validation and capture.
+Use a fresh builder VM created with the current cloud-config. Because Azure does
+not allow generalized VMs to be restarted, any existing builder from a previous
+release must be destroyed (`TF_VAR_az_runner_image=false terraform apply`) before
+provisioning a new one. The builder stays running so Run Command can validate it
+before capture. Do not restart or modify it between validation and capture.
 
 Prerequisites: Bash 4+, Terraform ≥ 1.1, Azure CLI, GNU `timeout`. The operator
 needs Azure permissions for Run Command, VM lifecycle, and image creation.
@@ -10,6 +12,8 @@ needs Azure permissions for Run Command, VM lifecycle, and image creation.
 ```bash
 timeout --kill-after=30s 60m bash -s <<'BASH'
 set -euo pipefail
+# Destroy any existing builder VM first; generalized VMs cannot be restarted.
+TF_VAR_az_runner_image=false terraform apply -auto-approve
 TF_VAR_az_runner_image=true terraform plan -out=tfplan
 terraform apply tfplan
 
@@ -98,12 +102,13 @@ A local timeout does not necessarily stop the guest-side command. On
 validation failure, leave the builder running for diagnosis. It continues
 to incur charges until explicitly deallocated or deleted.
 
-After capturing the image, add a **new** `azurerm_shared_image_version` resource
-in `runner_image.tf` for the new version. Do not modify the existing resource's
-`name` in-place — the Azure provider treats it as ForceNew and would destroy the
-previous gallery version. Use a `moved` block or `terraform state mv` when
-renaming an existing resource address. Always inspect the plan before applying;
-it must not contain a destroy for any previous gallery version.
+After capturing the image, add a new `data "azurerm_image"` reference for the
+captured managed image and a separate `azurerm_shared_image_version` resource
+for the new version (e.g. `runner_1_0_12`). Keep the existing `runner_1_0_11`
+resource unchanged so the previous image remains available for rollback. Do not
+modify existing version resources in-place — the Azure provider treats `name` as
+ForceNew and would destroy the previous gallery version. Always inspect the plan
+before applying; it must not contain a destroy for any previous gallery version.
 
 # Rolling back to the previous runner image
 
