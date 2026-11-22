@@ -2,9 +2,10 @@
 
 Use a fresh builder VM created with the current cloud-config. Because Azure does
 not allow generalized VMs to be restarted, any existing builder from a previous
-release must be destroyed (`TF_VAR_az_runner_image=false terraform apply`) before
-provisioning a new one. The builder stays running so Run Command can validate it
-before capture. Do not restart or modify it between validation and capture.
+release must be destroyed before provisioning a new one. Inspect the cleanup plan
+to confirm it only removes builder resources. The builder stays running so Run
+Command can validate it before capture. Do not restart or modify it between
+validation and capture.
 
 Prerequisites: Bash 4+, Terraform ≥ 1.1, Azure CLI, GNU `timeout`. The operator
 needs Azure permissions for Run Command, VM lifecycle, and image creation.
@@ -12,8 +13,10 @@ needs Azure permissions for Run Command, VM lifecycle, and image creation.
 ```bash
 timeout --kill-after=30s 60m bash -s <<'BASH'
 set -euo pipefail
-# Destroy any existing builder VM first; generalized VMs cannot be restarted.
-TF_VAR_az_runner_image=false terraform apply -auto-approve
+# If an old builder exists from a previous release, destroy it first (generalized VMs cannot be restarted).
+TF_VAR_az_runner_image=false terraform plan -out=builder-cleanup.tfplan
+terraform apply builder-cleanup.tfplan
+
 TF_VAR_az_runner_image=true terraform plan -out=tfplan
 terraform apply tfplan
 
