@@ -19,4 +19,5 @@ patches:
     data:
       http-snippet: |
         limit_req_zone $server_name zone=omegaup_problem_global:10m rate=1r/s;
+        limit_req_zone $server_name zone=omegaup_problem_global_v2:10m rate=2r/s;
         limit_req_zone $binary_remote_addr zone=omegaup_problem_per_ip:10m rate=2r/s;
